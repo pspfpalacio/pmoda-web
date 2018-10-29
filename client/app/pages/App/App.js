@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import Menu from '../../components/Menu/Menu';
+// import Menu from '../../components/Menu/Menu';
 import UserBar from '../../components/UserBar/UserBar';
+
+const Menu = require("../../components/Menu")
 
 const App = ({ children }) => (
   <>

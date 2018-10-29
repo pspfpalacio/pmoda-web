@@ -7,6 +7,8 @@ import {
 // import { browserHistory } from 'react-router'
 
 const navigateTo = (history, url) => {
+  console.log("history", history)
+  console.log("url", url)
   // const { from } = { from: { pathname: url } }
 
   // window.history.pushState(null, null, url)
