@@ -1,0 +1,18 @@
+@import './mixins';
+
+.spinner__fullscream {
+  @include full-size(fixed);
+  background-color: transparentize(#ffffff, 0.1);
+}
+
+.spinner__container--fullscream {
+  @include center;
+}
+
+.spinner__inline {
+  position: relative;
+}
+
+.spinner__container--inline {
+  position: absolute;
+}

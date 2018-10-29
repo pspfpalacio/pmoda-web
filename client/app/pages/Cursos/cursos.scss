@@ -1,0 +1,55 @@
+.form__action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.form__body {
+  width: 50%;
+  padding: 0 40px 10px 40px;
+}
+
+.modal__body-confirm {
+  padding: 0 20px;
+  display: flex;
+  margin-top: 5px;
+  justify-content: space-around;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  &>* {
+      flex: 1;
+  }
+}
+
+.modal__action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding: 20px;
+}
+
+
+.status-summary {
+  text-align: center;
+  .status {
+      -webkit-border-radius: 5px;
+      border-radius: 15px;
+      display: inline-block;
+      width: 25px;
+      height: 25px;
+      line-height: 25px;
+      text-align: center;
+      margin: 0 5px 0 5px;
+      color: white;
+  }
+  .status-active {
+      background-color: #0db478;
+  }
+  .status-pending {
+      background-color: #bbb;
+  }
+  .status-deactive {
+      background-color: #f87373;
+  }
+}

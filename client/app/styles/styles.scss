@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+@import 'vendor/normalize';
+@import '../pages/shared';
+@import '../components/shared';
+
+@import '~react-table/react-table.css';
+
+a {
+  text-decoration: none;
+}
+
+.ReactTable {
+  box-shadow: 0 0.07em 0.125em 0 rgba(0,0,0,.15);
+  border: 0;
+  font-size: 14px;
+
+  .rt-thead {
+    .rt-th {
+      background-color: #f5f5f5;
+      border-right: 0;
+      color: rgba(#000, 0.45);
+      padding: 8px 16px;
+      text-align: left;
+    }
+  }
+
+  .rt-tbody {
+    .rt-td {
+      background: #fff;
+      border-right: 0;
+      padding: 8px 16px;
+    }
+
+    .selected {
+      .rt-td {
+        background: rgba(#000, 0.1);
+      }
+    }
+  }
+}
