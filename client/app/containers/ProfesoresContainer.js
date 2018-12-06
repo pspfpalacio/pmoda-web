@@ -5,7 +5,7 @@ const UIContainer = require("./UIContainer")
 
 import 'whatwg-fetch';
 
-const initAlumno = () => {
+const initProfesor = () => {
   return {
     dni: '',
     name: '',
@@ -30,7 +30,7 @@ const initAlumno = () => {
   }
 }
 
-class AlumnosContainer extends Container {
+class ProfesorContainer extends Container {
   constructor() {
     super();
 
@@ -39,12 +39,12 @@ class AlumnosContainer extends Container {
      * modificar cualquier valor usar los métodos setter.
      */
     this.state = {
-      alumnos: [],
-      selectedAlumnos: [],
-      toActiveAlumnos: [],
-      toDeactiveAlumnos: [],
+      profesores: [],
+      selectedProfesores: [],
+      toActiveProfesores: [],
+      toDeactiveProfesores: [],
       toStatus: '',
-      alumno: initAlumno(),
+      profesor: initProfesor(),
       configTitle: '',
       modal: {
         confirm: false,
@@ -61,16 +61,16 @@ class AlumnosContainer extends Container {
     }
   }
 
-  onLoadAlumnos() {
-    let list = fetch('/api/alumnos').then(res => res.json())
+  onLoadProfesores() {
+    let list = fetch('/api/instructors').then(res => res.json())
     Promise.all([list]).then(values => {
-      const alumnos = values[0]
+      const profesores = values[0]
       this.setState({
-        alumnos
+        profesores
       })
     }).catch(error => {
-      console.log("Error al obtener los alumnos", error)
-      this.setState({alumnos: []})
+      console.log("Error al obtener los profesores", error)
+      this.setState({profesores: []})
     })
   }
 
@@ -90,7 +90,7 @@ class AlumnosContainer extends Container {
 
   onLoadLocalidades() {
     this.setLoading({localidades: true})    
-    const { provincia } = this.state.alumno    
+    const { provincia } = this.state.profesor    
     let filterProvincias = this.state.provincias.filter(it => it._id === provincia._id)    
     const localidades = filterProvincias[0].localidades
     this.setState({
@@ -98,10 +98,10 @@ class AlumnosContainer extends Container {
     }, () => this.setLoading({localidades: false}))
   }
 
-  setAlumno(params, callback) {
+  setProfesor(params, callback) {
     const newState = state => {
       return {
-        alumno: Object.assign({}, state.alumno, params)
+        profesor: Object.assign({}, state.profesor, params)
       }
     }
     if (callback) {
@@ -133,43 +133,42 @@ class AlumnosContainer extends Container {
     })
   }
 
-  onCheck(event, alumno) {
-    let selectedAlumnos = this.state.selectedAlumnos
-    let toDeactiveAlumnos = this.state.toDeactiveAlumnos
-    let toActiveAlumnos = this.state.toActiveAlumnos
+  onCheck(event, profesor) {
+    let selectedProfesores = this.state.selectedProfesores
+    let toDeactiveProfesores = this.state.toDeactiveProfesores
+    let toActiveProfesores = this.state.toActiveProfesores
     if (event.target.checked) {
-      if (alumno.enabled) {
-        toDeactiveAlumnos.push(alumno)
+      if (profesor.enabled) {
+        toDeactiveProfesores.push(profesor)
       } else {
-        toActiveAlumnos.push(alumno)
+        toActiveProfesores.push(profesor)
       }
-      selectedAlumnos.push(alumno)
+      selectedProfesores.push(profesor)
     } else {
-      toDeactiveAlumnos = this.state.toDeactiveAlumnos.filter(row => row._id !== alumno._id)
-      toActiveAlumnos = this.state.toActiveAlumnos.filter(row => row._id !== alumno._id)
-      selectedAlumnos = this.state.selectedAlumnos.filter(row => row._id !== alumno._id)
+      toDeactiveProfesores = this.state.toDeactiveProfesores.filter(row => row._id !== profesor._id)
+      toActiveProfesores = this.state.toActiveProfesores.filter(row => row._id !== profesor._id)
+      selectedProfesores = this.state.selectedProfesores.filter(row => row._id !== profesor._id)
     }
-    this.setState({toDeactiveAlumnos, toActiveAlumnos, selectedAlumnos})
+    this.setState({toDeactiveProfesores, toActiveProfesores, selectedProfesores})
   }
 
-  isCheck(alumno) {
-    let listChecked = this.state.selectedAlumnos.filter(row => row._id === alumno._id)
+  isCheck(profesor) {
+    let listChecked = this.state.selectedProfesores.filter(row => row._id === profesor._id)
     return listChecked.length > 0
   }
 
-  onNewAlumno() {
+  onNewProfesor() {
     this.setState({
-      alumno: initAlumno(),
-      configTitle: 'Nuevo Alumno',
+      profesor: initProfesor(),
+      configTitle: 'Nuevo Profesor',
       errors: []
     })
   }
 
-  onEditAlumno(row, callback) {
-    console.log("alumno", row)
+  onEditProfesor(row, callback) {    
     this.setState({
-      alumno: row,
-      configTitle: 'Modificar Alumno',
+      profesor: row,
+      configTitle: 'Modificar Profesor',
       errors: []
     }, () => {      
       this.onLoadLocalidades()
@@ -188,12 +187,12 @@ class AlumnosContainer extends Container {
   }
 
   onActive() {
-    if (this.state.toActiveAlumnos.length > 0) {
+    if (this.state.toActiveProfesores.length > 0) {
       this.setState(state => {
         return {
           modal: Object.assign({}, state.modal, {
             status: true,
-            statusTitle: '¿Está seguro que desea activar los alumnos seleccionados?'
+            statusTitle: '¿Está seguro que desea activar los profesores seleccionados?'
           }),
           toStatus: 'active'
         }
@@ -202,12 +201,12 @@ class AlumnosContainer extends Container {
   }
   
   onDeactive() {
-    if (this.state.toDeactiveAlumnos.length > 0) {
+    if (this.state.toDeactiveProfesores.length > 0) {
       this.setState(state => {
         return {
           modal: Object.assign({}, state.modal, {
             status: true,
-            statusTitle: '¿Está seguro que desea desactivar los alumnos seleccionados?'
+            statusTitle: '¿Está seguro que desea desactivar los profesores seleccionados?'
           }),
           toStatus: 'deactive'
         }
@@ -220,14 +219,14 @@ class AlumnosContainer extends Container {
     this.closeModalStatus()
 
     if (this.state.toStatus === 'active') {
-      this.activeAlumnos()
+      this.activeProfesores()
     } else {      
-      this.deactiveAlumnos()
+      this.deactiveProfesores()
     }
   }
 
-  activeAlumnos() {
-    let ids = this.state.toActiveAlumnos.map(it => it._id)    
+  activeProfesores() {
+    let ids = this.state.toActiveProfesores.map(it => it._id)    
     let body = {
       ids: ids,
       toStatus: true,
@@ -235,7 +234,7 @@ class AlumnosContainer extends Container {
       fecha: moment().format()
     }
 
-    fetch('/api/alumnos_status', {
+    fetch('/api/instructors_status', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -245,11 +244,11 @@ class AlumnosContainer extends Container {
       console.log("json", json)
       if (json.ok !== 0) {
         this.setState({
-          toActiveAlumnos: [],
-          toDeactiveAlumnos: [],
-          selectedAlumnos: []
+          toActiveProfesores: [],
+          toDeactiveProfesores: [],
+          selectedProfesores: []
         }, () => {
-          this.onLoadAlumnos()
+          this.onLoadProfesores()
           UIContainer.Instance.closeSpinner()
           UIContainer.Instance.showSnackbar("Estado actualizado correctamente", "success", "CERRAR")
         })
@@ -261,8 +260,8 @@ class AlumnosContainer extends Container {
     })
   }
 
-  deactiveAlumnos() {
-    let ids = this.state.toDeactiveAlumnos.map(it => it._id)    
+  deactiveProfesores() {
+    let ids = this.state.toDeactiveProfesores.map(it => it._id)    
     let body = {
       ids: ids,
       toStatus: false,
@@ -270,7 +269,7 @@ class AlumnosContainer extends Container {
       fecha: moment().format()
     }
 
-    fetch('/api/alumnos_status', {
+    fetch('/api/instructors_status', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -280,11 +279,11 @@ class AlumnosContainer extends Container {
       console.log("json", json)
       if (json.ok !== 0) {
         this.setState({
-          toActiveAlumnos: [],
-          toDeactiveAlumnos: [],
-          selectedAlumnos: []
+          toActiveProfesores: [],
+          toDeactiveProfesores: [],
+          selectedProfesores: []
         }, () => {
-          this.onLoadAlumnos()
+          this.onLoadProfesores()
           UIContainer.Instance.closeSpinner()
           UIContainer.Instance.showSnackbar("Estado actualizado correctamente", "success", "CERRAR")
         })
@@ -321,7 +320,7 @@ class AlumnosContainer extends Container {
       address_postcode,
       provincia,
       location
-    } = this.state.alumno;
+    } = this.state.profesor;
     const errors = [];
 
     (dni.length === 0) && errors.push('dni');
@@ -352,14 +351,14 @@ class AlumnosContainer extends Container {
   onConfirm(callback) {
     UIContainer.Instance.showSpinner()
 
-    if (this.state.alumno._id) {
-      this.updateAlumno(callback)
+    if (this.state.profesor._id) {
+      this.updateProfesor(callback)
     } else {     
-      this.createAlumno(callback)
+      this.createProfesor(callback)
     }
   }
 
-  createAlumno(callback) {
+  createProfesor(callback) {
     const { 
       dni, 
       name, 
@@ -374,7 +373,7 @@ class AlumnosContainer extends Container {
       address_department,
       address_postcode,
       provincia,
-      location } = this.state.alumno
+      location } = this.state.profesor
     
     delete provincia.localidades
 
@@ -399,7 +398,7 @@ class AlumnosContainer extends Container {
 
     console.log("body", body)
 
-    fetch('/api/alumnos', {
+    fetch('/api/instructors', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -408,25 +407,25 @@ class AlumnosContainer extends Container {
     }).then(res => res.json()).then(json => {
       console.log("json", json)
       if (json._id) {
-        this.onLoadAlumnos()
+        this.onLoadProfesores()
         callback()
         this.setStateModal({confirm: false})
         UIContainer.Instance.closeSpinner()
-        UIContainer.Instance.showSnackbar("Alumno creado correctamente", "success", "CERRAR")
+        UIContainer.Instance.showSnackbar("Profesor creado correctamente", "success", "CERRAR")
       } else {
         this.setStateModal({confirm: false})
         UIContainer.Instance.closeSpinner()      
-        UIContainer.Instance.showSnackbar("Ocurrió un error al crear el alumno", "error", "CERRAR")
+        UIContainer.Instance.showSnackbar("Ocurrió un error al crear el profesor", "error", "CERRAR")
       }      
     }).catch(error => {
       console.log("error", error)
       this.setStateModal({confirm: false})
       UIContainer.Instance.closeSpinner()      
-      UIContainer.Instance.showSnackbar("Ocurrió un error al crear el alumno", "error", "CERRAR")
+      UIContainer.Instance.showSnackbar("Ocurrió un error al crear el profesor", "error", "CERRAR")
     })
   }
 
-  updateAlumno(callback) {
+  updateProfesor(callback) {
     const { 
       dni, 
       name, 
@@ -441,7 +440,7 @@ class AlumnosContainer extends Container {
       address_department,
       address_postcode,
       provincia,
-      location } = this.state.alumno
+      location } = this.state.profesor
     
     delete provincia.localidades
 
@@ -464,7 +463,7 @@ class AlumnosContainer extends Container {
       fecha_mod: moment().format()
     }
 
-    fetch(`/api/alumnos/${this.state.alumno._id}`, {
+    fetch(`/api/instructors/${this.state.profesor._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -473,24 +472,24 @@ class AlumnosContainer extends Container {
     }).then(res => res.json()).then(json => {
       console.log("json", json)
       if (json.ok >= 1) {
-        this.onLoadAlumnos()
+        this.onLoadProfesores()
         callback()
         this.setStateModal({confirm: false})
         UIContainer.Instance.closeSpinner()
-        UIContainer.Instance.showSnackbar("Alumno actualizado correctamente", "success", "CERRAR")
+        UIContainer.Instance.showSnackbar("Profesor actualizado correctamente", "success", "CERRAR")
       } else {
         this.setStateModal({confirm: false})
         UIContainer.Instance.closeSpinner()
-        UIContainer.Instance.showSnackbar("Ocurrió un error al actualizar el alumno", "error", "CERRAR")
+        UIContainer.Instance.showSnackbar("Ocurrió un error al actualizar el profesor", "error", "CERRAR")
       }
     }).catch(error => {
       this.setStateModal({confirm: false})
       console.log("error", error)
       UIContainer.Instance.closeSpinner()      
-      UIContainer.Instance.showSnackbar("Ocurrió un error al actualizar el alumno", "error", "CERRAR")
+      UIContainer.Instance.showSnackbar("Ocurrió un error al actualizar el profesor", "error", "CERRAR")
     })
   }
 
 }
 
-module.exports = new AlumnosContainer();
+module.exports = new ProfesorContainer();

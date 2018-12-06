@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const AlumnoSchema = new mongoose.Schema({
+const InstructorSchema = new mongoose.Schema({
   dni: { type: Number, unique: true, default: 0 },
   name: { type: String, default: null },
   lastname: { type: String, default: null },
@@ -22,4 +22,4 @@ const AlumnoSchema = new mongoose.Schema({
   enabled: { type: Boolean, default: true }
 });
 
-module.exports = mongoose.model('Alumno', AlumnoSchema);
+module.exports = mongoose.model('Instructor', InstructorSchema);

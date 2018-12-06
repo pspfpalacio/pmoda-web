@@ -9,7 +9,7 @@ const Table = require("./components/Table")
 const ModalStatus = require("../components/ModalStatus")
 
 const { Subscribe } = require("unstated")
-const AlumnosContainer = require("../../../containers/AlumnosContainer")
+const ProfesoresContainer = require("../../../containers/ProfesoresContainer")
 const navigate = require("../../../../services/navigate")
 
 class List extends Component {
@@ -20,39 +20,39 @@ class List extends Component {
   }
 
   componentDidMount() {
-    AlumnosContainer.onLoadAlumnos()
-    AlumnosContainer.onLoadProvincias()
+    ProfesoresContainer.onLoadProfesores()
+    ProfesoresContainer.onLoadProvincias()
   }
 
   render() {
     return (
-      <Subscribe to={[AlumnosContainer]}>{(alumnosContainer) => {        
+      <Subscribe to={[ProfesoresContainer]}>{(profesoresContainer) => {        
         const { history } = this.props
-        const textActive = alumnosContainer.state.toActiveAlumnos.length > 0 
-            ? `Activar (${alumnosContainer.state.toActiveAlumnos.length})`
+        const textActive = profesoresContainer.state.toActiveProfesores.length > 0 
+            ? `Activar (${profesoresContainer.state.toActiveProfesores.length})`
             : 'Activar'
-        const textDeactive = alumnosContainer.state.toDeactiveAlumnos.length > 0
-            ? `Desactivar (${alumnosContainer.state.toDeactiveAlumnos.length})`
+        const textDeactive = profesoresContainer.state.toDeactiveProfesores.length > 0
+            ? `Desactivar (${profesoresContainer.state.toDeactiveProfesores.length})`
             : 'Desactivar'
         return (
           <React.Fragment>
-            <h4 className="ui-card__title">Configuración de alumnos</h4>
+            <h4 className="ui-card__title">Configuración de profesores</h4>
     
             <div style={{display: "flex", justifyContent: "space-between"}}>
               <CardActions>
-                <FlatButton label="Nuevo Alumno" onClick={() => {
-                  alumnosContainer.onNewAlumno()
-                  navigate.to(history, "/alumnos/config")
+                <FlatButton label="Nuevo Profesor" onClick={() => {
+                  profesoresContainer.onNewProfesor()
+                  navigate.to(history, "/profesors/config")
                 }}  />
               </CardActions>
               <CardActions>
                 <RaisedButton 
                   label={textActive} 
-                  onClick={() => alumnosContainer.onActive()} 
+                  onClick={() => profesoresContainer.onActive()} 
                 />
                 <RaisedButton 
                   label={textDeactive} 
-                  onClick={() => alumnosContainer.onDeactive()} 
+                  onClick={() => profesoresContainer.onDeactive()} 
                 />
               </CardActions>
             </div>      

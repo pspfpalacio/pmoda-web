@@ -1,7 +1,7 @@
 const React = require('react')
 const { Subscribe } = require('unstated')
 
-const AlumnosContainer = require("../../../../containers/AlumnosContainer")
+const ProfesoresContainer = require("../../../../containers/ProfesoresContainer")
 
 const navigate = require("../../../../../services/navigate")
 
@@ -13,15 +13,15 @@ const Status = require("./Status")
 import Checkbox from 'material-ui/Checkbox';
 import { withRouter } from 'react-router-dom';
 
-const getColumns = (alumnosContainer, history) => {
+const getColumns = (profesoresContainer, history) => {
   return [
     {
       accessor: 'name',
       Cell: row => {
         return (
           <Checkbox             
-            onCheck={(e) => alumnosContainer.onCheck(e, row.original)}
-            checked={alumnosContainer.isCheck(row.original)} />
+            onCheck={(e) => profesoresContainer.onCheck(e, row.original)}
+            checked={profesoresContainer.isCheck(row.original)} />
         )
       },
       style: {
@@ -98,7 +98,7 @@ const getColumns = (alumnosContainer, history) => {
         <span style={{cursor: 'pointer'}}>
           <MdModeEdit 
             onClick={() => {              
-              alumnosContainer.onEditAlumno(row.original, () => navigate.to(history, "/alumnos/config"));
+              profesoresContainer.onEditProfesor(row.original, () => navigate.to(history, "/profesors/config"));
             }}
           />
         </span>
@@ -117,15 +117,15 @@ const getColumns = (alumnosContainer, history) => {
 
 const Table = (props) => (
   <Subscribe
-    to={[AlumnosContainer]}>{(alumnosContainer) => {
+    to={[ProfesoresContainer]}>{(profesoresContainer) => {
     const { history } = props
     return (
       <ReactTable        
-        data={alumnosContainer.state.alumnos}
-        columns={getColumns(alumnosContainer, history)}
+        data={profesoresContainer.state.profesores}
+        columns={getColumns(profesoresContainer, history)}
         defaultPageSize={10} 
         showPagination={true}
-        noDataText="No se encontraron alumnos."
+        noDataText="No se encontraron profesores."
         loadingText="Cargando..."
         previousText="Anterior"
         nextText="Siguiente"

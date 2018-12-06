@@ -15,7 +15,7 @@ const { Subscribe } = require("unstated")
 const moment = require("moment")
 require('moment/locale/es')
 
-const AlumnosContainer = require("../../../containers/AlumnosContainer")
+const ProfesoresContainer = require("../../../containers/ProfesoresContainer")
 
 const navigate = require("../../../../services/navigate")
 
@@ -27,19 +27,19 @@ class Config extends Component {
   }
 
   componentDidMount() {
-    AlumnosContainer.onLoadProvincias()
+    ProfesoresContainer.onLoadProvincias()
   }
 
   render() {
     return (
-      <Subscribe to={[AlumnosContainer]}>{(alumnosContainer) => {
+      <Subscribe to={[ProfesoresContainer]}>{(profesoresContainer) => {
         const { history } = this.props
         return (
           <React.Fragment>
-            <h4 className="ui-card__title">Configuración de alumnos</h4>
+            <h4 className="ui-card__title">Configuración de profesores</h4>
     
             <CardTitle
-              title={alumnosContainer.state.configTitle}
+              title={profesoresContainer.state.configTitle}
             />
             <div className="form__body">
               <h5 style={{color: "#666", marginTop: "0", marginBottom: "0.5em"}}>Datos personales</h5>
@@ -50,9 +50,9 @@ class Config extends Component {
                 type="number"
                 floatingLabelFixed={true}
                 fullWidth={true}            
-                value={alumnosContainer.state.alumno.dni}
-                errorText={alumnosContainer.onRequiredInput('dni')}
-                onChange={(e) => alumnosContainer.setAlumno({'dni': e.target.value})}
+                value={profesoresContainer.state.profesor.dni}
+                errorText={profesoresContainer.onRequiredInput('dni')}
+                onChange={(e) => profesoresContainer.setProfesor({'dni': e.target.value})}
               />
               <TextField
                 name="name"
@@ -60,9 +60,9 @@ class Config extends Component {
                 floatingLabelText="Nombre"
                 floatingLabelFixed={true}
                 fullWidth={true}
-                value={alumnosContainer.state.alumno.name}
-                errorText={alumnosContainer.onRequiredInput('name')}
-                onChange={(e) => alumnosContainer.setAlumno({'name': e.target.value})}
+                value={profesoresContainer.state.profesor.name}
+                errorText={profesoresContainer.onRequiredInput('name')}
+                onChange={(e) => profesoresContainer.setProfesor({'name': e.target.value})}
               />
               <TextField
                 name="lastname"
@@ -70,9 +70,9 @@ class Config extends Component {
                 floatingLabelText="Apellido"
                 floatingLabelFixed={true}
                 fullWidth={true}
-                value={alumnosContainer.state.alumno.lastname}
-                errorText={alumnosContainer.onRequiredInput('lastname')}
-                onChange={(e) => alumnosContainer.setAlumno({'lastname': e.target.value})}
+                value={profesoresContainer.state.profesor.lastname}
+                errorText={profesoresContainer.onRequiredInput('lastname')}
+                onChange={(e) => profesoresContainer.setProfesor({'lastname': e.target.value})}
               />
               <div className="ui-label__datepicker">Fecha de nacimiento</div>
               <DatePicker
@@ -81,12 +81,12 @@ class Config extends Component {
                 showTimeSelect={false}
                 dateFormat="DD/MM/YYYY"
                 timeFormat="HH:mm"
-                selected={alumnosContainer.state.alumno["birthdate"] ? moment(alumnosContainer.state.alumno["birthdate"]) : null}
+                selected={profesoresContainer.state.profesor["birthdate"] ? moment(profesoresContainer.state.profesor["birthdate"]) : null}
                 onChange={(dt) => {
                   if (dt.isValid()) {
-                    alumnosContainer.setAlumno({birthdate: dt.format()})
+                    profesoresContainer.setProfesor({birthdate: dt.format()})
                   } else {
-                    alumnosContainer.setAlumno({birthdate: null})
+                    profesoresContainer.setProfesor({birthdate: null})
                   }
                 }}
               />          
@@ -96,30 +96,30 @@ class Config extends Component {
               <div style={{width: "69%"}}>
                 <Select
                   placeholder="Seleccione..."
-                  options={alumnosContainer.state.provincias}
+                  options={profesoresContainer.state.provincias}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option._id}
                   isClearable={true}
                   loadingPlaceholder="Cargando..."
                   noResultsText="No se encontraron provincias"
-                  isLoading={alumnosContainer.state.loading.provincias}
-                  value={alumnosContainer.state.alumno.provincia}
-                  onChange={value => alumnosContainer.setAlumno({ provincia: value }, () => alumnosContainer.onLoadLocalidades())}
+                  isLoading={profesoresContainer.state.loading.provincias}
+                  value={profesoresContainer.state.profesor.provincia}
+                  onChange={value => profesoresContainer.setProfesor({ provincia: value }, () => profesoresContainer.onLoadLocalidades())}
                 />
               </div>
               <div className="ui-label__select">Localidad</div>
               <div style={{width: "69%"}}>
                 <Select
                   placeholder="Seleccione..."
-                  options={alumnosContainer.state.localidades}
+                  options={profesoresContainer.state.localidades}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option._id}
                   isClearable={true}
                   loadingPlaceholder="Cargando..."
                   noResultsText="No se encontraron localidades"
-                  isLoading={alumnosContainer.state.loading.localidades}
-                  value={alumnosContainer.state.alumno.location}
-                  onChange={value => alumnosContainer.setAlumno({ location: value })}
+                  isLoading={profesoresContainer.state.loading.localidades}
+                  value={profesoresContainer.state.profesor.location}
+                  onChange={value => profesoresContainer.setProfesor({ location: value })}
                 />
               </div>
               <TextField
@@ -129,9 +129,9 @@ class Config extends Component {
                 type="number"
                 floatingLabelFixed={true}
                 fullWidth={true}            
-                value={alumnosContainer.state.alumno.address_postcode}
-                errorText={alumnosContainer.onRequiredInput('address_postcode')}
-                onChange={(e) => alumnosContainer.setAlumno({'address_postcode': e.target.value})}
+                value={profesoresContainer.state.profesor.address_postcode}
+                errorText={profesoresContainer.onRequiredInput('address_postcode')}
+                onChange={(e) => profesoresContainer.setProfesor({'address_postcode': e.target.value})}
               />
               <TextField
                 name="address_street"
@@ -139,9 +139,9 @@ class Config extends Component {
                 floatingLabelText="Calle"
                 floatingLabelFixed={true}
                 fullWidth={true}
-                value={alumnosContainer.state.alumno.address_street}
-                errorText={alumnosContainer.onRequiredInput('address_street')}
-                onChange={(e) => alumnosContainer.setAlumno({'address_street': e.target.value})}
+                value={profesoresContainer.state.profesor.address_street}
+                errorText={profesoresContainer.onRequiredInput('address_street')}
+                onChange={(e) => profesoresContainer.setProfesor({'address_street': e.target.value})}
               />
               <TextField
                 name="address_number"
@@ -150,9 +150,9 @@ class Config extends Component {
                 type="number"
                 floatingLabelFixed={true}
                 fullWidth={true}
-                value={alumnosContainer.state.alumno.address_number}
-                errorText={alumnosContainer.onRequiredInput('address_number')}
-                onChange={(e) => alumnosContainer.setAlumno({'address_number': e.target.value})}
+                value={profesoresContainer.state.profesor.address_number}
+                errorText={profesoresContainer.onRequiredInput('address_number')}
+                onChange={(e) => profesoresContainer.setProfesor({'address_number': e.target.value})}
               />
               <TextField
                 name="address_floor"
@@ -160,9 +160,9 @@ class Config extends Component {
                 floatingLabelText="Piso"
                 floatingLabelFixed={true}
                 fullWidth={true}
-                value={alumnosContainer.state.alumno.address_floor}
+                value={profesoresContainer.state.profesor.address_floor}
                 // errorText={alumnosContainer.onRequiredInput('address_floor')}
-                onChange={(e) => alumnosContainer.setAlumno({'address_floor': e.target.value})}
+                onChange={(e) => profesoresContainer.setProfesor({'address_floor': e.target.value})}
               />
               <TextField
                 name="address_department"
@@ -170,9 +170,9 @@ class Config extends Component {
                 floatingLabelText="Departamento"
                 floatingLabelFixed={true}
                 fullWidth={true}
-                value={alumnosContainer.state.alumno.address_department}
+                value={profesoresContainer.state.profesor.address_department}
                 // errorText={alumnosContainer.onRequiredInput('address_floor')}
-                onChange={(e) => alumnosContainer.setAlumno({'address_department': e.target.value})}
+                onChange={(e) => profesoresContainer.setProfesor({'address_department': e.target.value})}
               />
 
               <h5 style={{color: "#666", marginTop: "2em", marginBottom: "0.5em"}}>Datos de contacto</h5>
@@ -182,9 +182,9 @@ class Config extends Component {
                 floatingLabelText="Email"
                 floatingLabelFixed={true}
                 fullWidth={true}
-                value={alumnosContainer.state.alumno.email}
-                errorText={alumnosContainer.onRequiredInput('email')}
-                onChange={(e) => alumnosContainer.setAlumno({'email': e.target.value})}
+                value={profesoresContainer.state.profesor.email}
+                errorText={profesoresContainer.onRequiredInput('email')}
+                onChange={(e) => profesoresContainer.setProfesor({'email': e.target.value})}
               />
               <TextField
                 name="cell_phone"
@@ -192,9 +192,9 @@ class Config extends Component {
                 floatingLabelText="Tel. celular"
                 floatingLabelFixed={true}
                 fullWidth={true}
-                value={alumnosContainer.state.alumno.cell_phone}
-                errorText={alumnosContainer.onRequiredInput('cell_phone')}
-                onChange={(e) => alumnosContainer.setAlumno({'cell_phone': e.target.value})}
+                value={profesoresContainer.state.profesor.cell_phone}
+                errorText={profesoresContainer.onRequiredInput('cell_phone')}
+                onChange={(e) => profesoresContainer.setProfesor({'cell_phone': e.target.value})}
               />
               <TextField
                 name="home_phone"
@@ -202,9 +202,9 @@ class Config extends Component {
                 floatingLabelText="Tel. fijo"
                 floatingLabelFixed={true}
                 fullWidth={true}
-                value={alumnosContainer.state.alumno.home_phone}
+                value={profesoresContainer.state.profesor.home_phone}
                 // errorText={alumnosContainer.onRequiredInput('home_phone')}
-                onChange={(e) => alumnosContainer.setAlumno({'home_phone': e.target.value})}
+                onChange={(e) => profesoresContainer.setProfesor({'home_phone': e.target.value})}
               />
     
             </div>
@@ -213,12 +213,12 @@ class Config extends Component {
                 className="button__confirm"
                 label="Aceptar"
                 primary={true}                            
-                onClick={() => alumnosContainer.onAcept()}
+                onClick={() => profesoresContainer.onAcept()}
               />
               <FlatButton
                   label="Volver"
                   primary={true}
-                  onClick={() => navigate.to(history, "/alumnos/list")}
+                  onClick={() => navigate.to(history, "/profesors/list")}
               />
             </div>
             <ModalConfirm />

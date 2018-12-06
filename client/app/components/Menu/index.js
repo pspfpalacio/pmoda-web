@@ -45,6 +45,11 @@ const Menu = (props) => (
             primaryText="Alumnos"
             onClick={() => navigate.to(history, "/alumnos/list")}
           />
+          <ListItem
+            key={4}
+            primaryText="Profesores"
+            onClick={() => navigate.to(history, "/profesors/list")}
+          />
         </List>
         }
       </div>

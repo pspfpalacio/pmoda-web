@@ -23,6 +23,8 @@ import CursosList from './pages/Cursos/List';
 
 const AlumnosConfig = require('./pages/Alumnos/Config')
 const AlumnosList = require('./pages/Alumnos/List')
+const ProfesorConfig = require('./pages/Profesores/Config')
+const ProfesorList = require('./pages/Profesores/List')
 
 import Home from './components/Home/Home';
 import HelloWorld from './components/HelloWorld/HelloWorld';
@@ -52,6 +54,8 @@ render((
                 <PrivateRoute path="/cursos/config" component={CursosConfig}/>
                 <PrivateRoute path="/alumnos/list" component={AlumnosList}/>
                 <PrivateRoute path="/alumnos/config" component={AlumnosConfig}/>
+                <PrivateRoute path="/profesors/list" component={ProfesorList}/>
+                <PrivateRoute path="/profesors/config" component={ProfesorConfig}/>
                 <Route component={NotFound}/>
               </Switch>
 

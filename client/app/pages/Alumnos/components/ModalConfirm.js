@@ -24,12 +24,12 @@ const ModalConfirm = (props) => (
             className="button__confirm"
             label="Confirmar"
             primary={true}                            
-            // onClick={() => alumnosContainer.onConfirm(navigate.to(history, "/alumnos/list"))}
+            onClick={() => alumnosContainer.onConfirm(() => navigate.to(history, "/alumnos/list"))}
           />
           <FlatButton
             label="Cerrar"
             primary={true}
-            // onClick={() => alumnosContainer.closeModal()}
+            onClick={() => alumnosContainer.closeModal()}
           />
         </div>
       </Dialog>
