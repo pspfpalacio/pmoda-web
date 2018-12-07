@@ -3,24 +3,22 @@ const moment = require('moment');
 import 'whatwg-fetch';
 
 class SecurityContainer extends Container {
-    constructor() {
-      super();
-    
-      /**
-       * Todos los campos del state son solamente para lectura. Si se quiere
-       * modificar cualquier valor usar los métodos setter.
-       */
-      this.state = {
-        user: null,
-        pass: null,
-        loginUser: null,
-        isAuthenticated: false
-      };
-    }
+  constructor() {
+    super();
+  
+    /**
+     * Todos los campos del state son solamente para lectura. Si se quiere
+     * modificar cualquier valor usar los métodos setter.
+     */
+    this.state = {
+      user: null,
+      pass: null,
+      loginUser: null,
+      isAuthenticated: false
+    };
+  }
 
-    login() {
-      console.log("user", this.state.user)
-      console.log("pass", this.state.pass)
+    login() {      
       fetch('/api/users')
         .then(res => res.json())
         .then(data => {
@@ -48,8 +46,7 @@ class SecurityContainer extends Container {
               },
               body: JSON.stringify(body)
             }).then(res => res.json())
-              .then(json => {
-                console.log("json", json)
+              .then(json => {                
                 window.sessionStorage.setItem("session-promoda", sessionId);
               });
           }
@@ -76,14 +73,12 @@ class SecurityContainer extends Container {
           if (data) {
             let now = moment();
             let fechaHora = moment(data.fechaHora);
-            let diff = now.diff(fechaHora, 'hours');
-            console.log("now", now);
-            console.log("fechaHora", fechaHora);
-            console.log("diff", diff);
+            let diff = now.diff(fechaHora, 'hours');            
             if (diff <= 1) {
               this.setState({
                 isAuthenticated: true,
-                user: data.user
+                user: data.user,
+                office: data.user.office
               })
             }
           }

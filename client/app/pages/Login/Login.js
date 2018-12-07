@@ -22,7 +22,7 @@ class Login extends Component {
     }
   
     render() {
-      console.log("this.props", this.props);
+      // console.log("this.props", this.props);
 
       const { from } = this.props.location.state || { from: { pathname: "/" } };
 

@@ -9,8 +9,8 @@ module.exports = (app) => {
   });
 
   app.post('/api/users', function (req, res, next) {
-    const user = new User();
-
+    let body = req.body;
+    const user = new User(body);
     user.save()
       .then(() => res.json(user))
       .catch((err) => next(err));

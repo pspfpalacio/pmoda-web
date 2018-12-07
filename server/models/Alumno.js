@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const AlumnoSchema = new mongoose.Schema({
+  office: { type: String, default: null },
   dni: { type: Number, unique: true, default: 0 },
   name: { type: String, default: null },
   lastname: { type: String, default: null },
