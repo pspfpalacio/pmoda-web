@@ -16,27 +16,24 @@ module.exports = (app) => {
       .catch((err) => next(err));
   });
 
-  app.delete('/api/users/:id', function (req, res, next) {
-    User.findOneAndRemove({ _id: req.params.id })
-      .exec()
-      .then((user) => res.json())
-      .catch((err) => next(err));
+  app.put('/api/users/:id', (req, res, next) => {
+    User.update({_id: req.params.id}, req.body)
+      .then((resp) => res.json(resp)).catch((err) => next(err))
   });
 
-  app.put('/api/users/:id/update', (req, res, next) => {
-    User.findById(req.params.id)
-      .exec()
-      .then((user) => {
-        console.log("body", req.body)
-        console.log("data", req.data)
-        user = req.body
-
-        user.save()
-          .then(() => res.json(user))
-          .catch((err) => next(err));
-      })
-      .catch((err) => next(err));
+  app.put('/api/users_status', (req, res, next) => {
+    User.updateMany(
+      {_id: {$in: req.body.ids}}, 
+      {$set: { "enabled" : req.body.toStatus, "user_modify": req.body.user, "last_modify": req.body.fecha }}
+    ).then((resp) => res.json(resp)).catch(err => next(err))
   });
+
+  // app.delete('/api/users/:id', function (req, res, next) {
+  //   User.findOneAndRemove({ _id: req.params.id })
+  //     .exec()
+  //     .then((user) => res.json())
+  //     .catch((err) => next(err));
+  // });  
 
 //   app.put('/api/counters/:id/decrement', (req, res, next) => {
 //     Counter.findById(req.params.id)

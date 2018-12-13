@@ -12,14 +12,14 @@ const initUsuario = () => {
     lastname: '',
     user: '',
     pass: '',
-    email: '',
-    id_rol: '',
+    email: '',  
+    role: '',
     id_alumno: '',
     id_profesor: '',
-    user_alta: '',
-    user_mod: '',
-    fecha_alta: '',
-    fecha_mod: '',
+    user_create: '',
+    user_modify: '',
+    date_create: '',
+    last_modify: '',
     enabled: true
   }
 }
@@ -70,29 +70,47 @@ class UsuariosContainer extends Container {
     })
   }
 
-  // onLoadProvincias() {
-  //   this.setLoading({provincias: true})
-  //   let list = fetch('/api/locations').then(res => res.json())
-  //   Promise.all([list]).then(values => {      
-  //     const provincias = values[0]
-  //     this.setState({
-  //       provincias
-  //     }, () => this.setLoading({provincias: false}))
-  //   }).catch(error => {
-  //     console.log("Error al obtener las provincias", error)
-  //     this.setState({provincias: []}, () => this.setLoading({provincias: false}))
-  //   })
-  // }
+  onLoadRoles() {
+    this.setLoading({roles: true})
+    let list = fetch('/api/roles').then(res => res.json())
+    Promise.all([list]).then(values => {      
+      const roles = values[0]
+      this.setState({
+        roles
+      }, () => this.setLoading({roles: false}))
+    }).catch(error => {
+      console.log("Error al obtener los roles", error)
+      this.setState({roles: []}, () => this.setLoading({roles: false}))
+    })
+  }
 
-  // onLoadLocalidades() {
-  //   this.setLoading({localidades: true})    
-  //   const { provincia } = this.state.alumno    
-  //   let filterProvincias = this.state.provincias.filter(it => it._id === provincia._id)    
-  //   const localidades = filterProvincias[0].localidades
-  //   this.setState({
-  //     localidades
-  //   }, () => this.setLoading({localidades: false}))
-  // }
+  onLoadAlumnos() {
+    this.setLoading({alumnos: true})
+    let list = fetch('/api/alumnos').then(res => res.json())
+    Promise.all([list]).then(values => {      
+      const alumnos = values[0]
+      this.setState({
+        alumnos
+      }, () => this.setLoading({alumnos: false}))
+    }).catch(error => {
+      console.log("Error al obtener los alumnos", error)
+      this.setState({alumnos: []}, () => this.setLoading({alumnos: false}))
+    })
+  }
+
+  onLoadProfesores() {
+    this.setLoading({profesores: true})
+    let list = fetch('/api/instructors').then(res => res.json())
+    Promise.all([list]).then(values => {      
+      const profesores = values[0]
+      this.setState({
+        profesores
+      }, () => this.setLoading({profesores: false}))
+    }).catch(error => {
+      console.log("Error al obtener los profesores", error)
+      this.setState({profesores: []}, () => this.setLoading({profesores: false}))
+    })
+  }
 
   setUsuario(params, callback) {
     const newState = state => {
@@ -232,7 +250,6 @@ class UsuariosContainer extends Container {
       fecha: moment().format()
     }
 
-    //TODO -> api de cambio de estado de usuarios
     fetch('/api/users_status', {
       method: 'PUT',
       headers: {
@@ -268,7 +285,6 @@ class UsuariosContainer extends Container {
       fecha: moment().format()
     }
 
-    //TODO -> api de cambio de estado de usuarios
     fetch('/api/users_status', {
       method: 'PUT',
       headers: {
@@ -307,34 +323,27 @@ class UsuariosContainer extends Container {
     })
   }
 
-  //TODO -> metodo de creacion de un nuevo usuario
   onAcept() {
     const {
-      dni,
       name,
       lastname,
-      birthdate,
-      cell_phone,
+      user,
+      pass,
       email,
-      address_street,
-      address_number,
-      address_postcode,
-      provincia,
-      location
-    } = this.state.alumno;
+      role,
+      id_alumno,
+      id_profesor
+    } = this.state.usuario;    
     const errors = [];
 
-    (dni.length === 0) && errors.push('dni');
     (name.length === 0) && errors.push('name');
     (lastname.length === 0) && errors.push('lastname');
-    (birthdate.length === 0) && errors.push('birthdate');
-    (cell_phone.length === 0) && errors.push('cell_phone');
+    (user.length === 0) && errors.push('user');
+    (pass.length === 0) && errors.push('pass');
     (email.length === 0) && errors.push('email');
-    (address_street.length === 0) && errors.push('address_street');
-    (address_number.length === 0) && errors.push('address_number');
-    (address_postcode.length === 0) && errors.push('address_postcode');
-    (provincia.length === 0) && errors.push('provincia');
-    (location.length === 0) && errors.push('location');
+    (role.length === 0) && errors.push('role');
+    (id_alumno.length === 0) && errors.push('id_alumno');
+    (id_profesor.length === 0) && errors.push('id_profesor');    
 
     this.setState({ errors: errors });
 
@@ -352,54 +361,41 @@ class UsuariosContainer extends Container {
   onConfirm(callback) {
     UIContainer.Instance.showSpinner()
 
-    if (this.state.alumno._id) {
-      this.updateAlumno(callback)
+    if (this.state.usuario._id) {
+      this.updateUsuario(callback)
     } else {     
-      this.createAlumno(callback)
+      this.createUsuario(callback)
     }
   }
 
-  createAlumno(callback) {
-    const { 
-      dni, 
-      name, 
-      lastname, 
-      birthdate, 
-      home_phone, 
-      cell_phone, 
-      email, 
-      address_street, 
-      address_number,
-      address_floor,
-      address_department,
-      address_postcode,
-      provincia,
-      location } = this.state.alumno
-    
-    delete provincia.localidades
-
-    const body = {
-      dni,
+  createUsuario(callback) {
+    const {
       name,
       lastname,
-      birthdate,
-      home_phone,
-      cell_phone,
+      user,
+      pass,
       email,
-      address_street,
-      address_number,
-      address_floor,
-      address_department,
-      address_postcode,
-      provincia: provincia,
-      location: location,
-      user_alta: SecurityContainer.state.user,
-      fecha_alta: moment().format()
+      role,
+      id_alumno,
+      id_profesor
+    } = this.state.usuario;
+
+    const body = {
+      name,
+      lastname,
+      user,
+      pass,
+      email,
+      role,
+      id_alumno,
+      id_profesor,
+      user_create: SecurityContainer.state.user,
+      date_create: moment().format()
     }
 
     console.log("body", body)
 
-    fetch('/api/alumnos', {
+    fetch('/api/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -408,63 +404,50 @@ class UsuariosContainer extends Container {
     }).then(res => res.json()).then(json => {
       console.log("json", json)
       if (json._id) {
-        this.onLoadAlumnos()
-        callback()
-        this.setStateModal({confirm: false})
-        UIContainer.Instance.closeSpinner()
-        UIContainer.Instance.showSnackbar("Alumno creado correctamente", "success", "CERRAR")
+        this.onLoadUsuarios();
+        callback();
+        this.setStateModal({confirm: false});
+        UIContainer.Instance.closeSpinner();
+        UIContainer.Instance.showSnackbar("Usuario creado correctamente", "success", "CERRAR");
       } else {
-        this.setStateModal({confirm: false})
-        UIContainer.Instance.closeSpinner()      
-        UIContainer.Instance.showSnackbar("Ocurrió un error al crear el alumno", "error", "CERRAR")
-      }      
+        this.setStateModal({confirm: false});
+        UIContainer.Instance.closeSpinner();
+        UIContainer.Instance.showSnackbar("Ocurrió un error al crear el usuario", "error", "CERRAR");
+      }
     }).catch(error => {
       console.log("error", error)
       this.setStateModal({confirm: false})
       UIContainer.Instance.closeSpinner()      
-      UIContainer.Instance.showSnackbar("Ocurrió un error al crear el alumno", "error", "CERRAR")
+      UIContainer.Instance.showSnackbar("Ocurrió un error al crear el usuario", "error", "CERRAR")
     })
   }
 
-  updateAlumno(callback) {
-    const { 
-      dni, 
-      name, 
-      lastname, 
-      birthdate, 
-      home_phone, 
-      cell_phone, 
-      email, 
-      address_street, 
-      address_number,
-      address_floor,
-      address_department,
-      address_postcode,
-      provincia,
-      location } = this.state.alumno
-    
-    delete provincia.localidades
-
-    const body = {
-      dni,
+  updateUsuario(callback) {
+    const {
       name,
       lastname,
-      birthdate,
-      home_phone,
-      cell_phone,
+      user,
+      pass,
       email,
-      address_street,
-      address_number,
-      address_floor,
-      address_department,
-      address_postcode,
-      provincia: provincia,
-      location: location,
-      user_mod: SecurityContainer.state.user,
-      fecha_mod: moment().format()
+      role,
+      id_alumno,
+      id_profesor
+    } = this.state.usuario;
+
+    const body = {
+      name,
+      lastname,
+      user,
+      pass,
+      email,
+      role,
+      id_alumno,
+      id_profesor,
+      user_modify: SecurityContainer.state.user,
+      last_modify: moment().format()
     }
 
-    fetch(`/api/alumnos/${this.state.alumno._id}`, {
+    fetch(`/api/users/${this.state.usuario._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -473,24 +456,24 @@ class UsuariosContainer extends Container {
     }).then(res => res.json()).then(json => {
       console.log("json", json)
       if (json.ok >= 1) {
-        this.onLoadAlumnos()
+        this.onLoadUsuarios()
         callback()
         this.setStateModal({confirm: false})
         UIContainer.Instance.closeSpinner()
-        UIContainer.Instance.showSnackbar("Alumno actualizado correctamente", "success", "CERRAR")
+        UIContainer.Instance.showSnackbar("Usuario actualizado correctamente", "success", "CERRAR")
       } else {
         this.setStateModal({confirm: false})
         UIContainer.Instance.closeSpinner()
-        UIContainer.Instance.showSnackbar("Ocurrió un error al actualizar el alumno", "error", "CERRAR")
+        UIContainer.Instance.showSnackbar("Ocurrió un error al actualizar el usuario", "error", "CERRAR")
       }
     }).catch(error => {
       this.setStateModal({confirm: false})
       console.log("error", error)
       UIContainer.Instance.closeSpinner()      
-      UIContainer.Instance.showSnackbar("Ocurrió un error al actualizar el alumno", "error", "CERRAR")
+      UIContainer.Instance.showSnackbar("Ocurrió un error al actualizar el usuario", "error", "CERRAR")
     })
   }
 
 }
 
-module.exports = new AlumnosContainer();
+module.exports = new UsuariosContainer();

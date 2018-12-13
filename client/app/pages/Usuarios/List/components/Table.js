@@ -1,7 +1,7 @@
 const React = require('react')
 const { Subscribe } = require('unstated')
 
-const AlumnosContainer = require("../../../../containers/AlumnosContainer")
+const UsuariosContainer = require("../../../../containers/UsuariosContainer")
 
 const navigate = require("../../../../../services/navigate")
 
@@ -13,15 +13,15 @@ const Status = require("./Status")
 import Checkbox from 'material-ui/Checkbox';
 import { withRouter } from 'react-router-dom';
 
-const getColumns = (alumnosContainer, history) => {
+const getColumns = (usuariosContainer, history) => {
   return [
     {
       accessor: 'name',
       Cell: row => {
         return (
           <Checkbox             
-            onCheck={(e) => alumnosContainer.onCheck(e, row.original)}
-            checked={alumnosContainer.isCheck(row.original)} />
+            onCheck={(e) => usuariosContainer.onCheck(e, row.original)}
+            checked={usuariosContainer.isCheck(row.original)} />
         )
       },
       style: {
@@ -32,9 +32,8 @@ const getColumns = (alumnosContainer, history) => {
       resizable: false
     },
     {
-      Header: 'DNI',
-      accessor: 'dni',
-      filterable: true
+      Header: 'Username',
+      accessor: 'user'
     },
     {
       Header: 'Apellido y Nombre',
@@ -47,36 +46,12 @@ const getColumns = (alumnosContainer, history) => {
       }      
     },
     {
-      Header: 'Tel. Cel.',
-      accessor: 'cell_phone'
-    },
-    {
-      Header: 'Tel. Fijo',
-      accessor: 'home_phone'
-    },
-    {
       Header: 'Correo',
       accessor: 'email'
     },
     {
-      Header: 'Dirección',
-      accessor: 'address_street',
-      Cell: row => {
-        const completeAddress = `${row.original.address_street} ${row.original.address_number}`
-        return (
-          <span>{completeAddress}</span>
-        )
-      }
-    },
-    {
-      Header: 'Localidad',
-      accessor: 'location',
-      Cell: row => {
-        // const completeAddress = `${row.original.address_street} ${row.original.address_number}`
-        return (
-          <span>{row.original.location.name}</span>
-        )
-      }
+      Header: 'Rol',
+      accessor: 'role'
     },
     {
       Header: () => "Estado",
@@ -98,7 +73,7 @@ const getColumns = (alumnosContainer, history) => {
         <span style={{cursor: 'pointer'}}>
           <MdModeEdit 
             onClick={() => {              
-              alumnosContainer.onEditAlumno(row.original, () => navigate.to(history, "/alumnos/config"));
+              usuariosContainer.onEditAlumno(row.original, () => navigate.to(history, "/usuarios/config"));
             }}
           />
         </span>
@@ -117,15 +92,15 @@ const getColumns = (alumnosContainer, history) => {
 
 const Table = (props) => (
   <Subscribe
-    to={[AlumnosContainer]}>{(alumnosContainer) => {
+    to={[UsuariosContainer]}>{(usuariosContainer) => {
     const { history } = props
     return (
       <ReactTable        
-        data={alumnosContainer.state.alumnos}
-        columns={getColumns(alumnosContainer, history)}
+        data={usuariosContainer.state.usuarios}
+        columns={getColumns(usuariosContainer, history)}
         defaultPageSize={10} 
         showPagination={true}
-        noDataText="No se encontraron alumnos."
+        noDataText="No se encontraron usuarios."
         loadingText="Cargando..."
         previousText="Anterior"
         nextText="Siguiente"
@@ -133,7 +108,7 @@ const Table = (props) => (
         ofText="de"
         rowsText="filas"
         pageSizeOptions={[10, 20, 25, 50]}
-        className="-striped -highlight withdrawals-table"        
+        className="-striped -highlight"        
       />
     )
   }}</Subscribe>

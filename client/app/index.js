@@ -25,6 +25,8 @@ const AlumnosConfig = require('./pages/Alumnos/Config')
 const AlumnosList = require('./pages/Alumnos/List')
 const ProfesorConfig = require('./pages/Profesores/Config')
 const ProfesorList = require('./pages/Profesores/List')
+const UsuariosList = require('./pages/Usuarios/List')
+const UsuariosConfig = require('./pages/Usuarios/Config')
 
 import Home from './components/Home/Home';
 import HelloWorld from './components/HelloWorld/HelloWorld';
@@ -56,6 +58,8 @@ render((
                 <PrivateRoute path="/alumnos/config" component={AlumnosConfig}/>
                 <PrivateRoute path="/profesors/list" component={ProfesorList}/>
                 <PrivateRoute path="/profesors/config" component={ProfesorConfig}/>
+                <PrivateRoute path="/usuarios/list" component={UsuariosList}/>
+                <PrivateRoute path="/usuarios/config" component={UsuariosConfig}/>
                 <Route component={NotFound}/>
               </Switch>
 

@@ -7,15 +7,13 @@ const UserSchema = new mongoose.Schema({
   user: { type: String, default: null },
   pass: { type: String, default: null },
   email: { type: String, default: null },  
-  id_rol: { type: Number, default: 0 },
+  role: { type: Object, default: 0 },
   id_alumno: { type: Number, default: 0 },
   id_profesor: { type: Number, default: 0 },
-  user_alta: { type: String, default: null },
-  user_mod: { type: String, default: null },
-  user_baja: { type: String, default: null },
-  fecha_alta: { type: Date, default: null },
-  fecha_mod: { type: Date, default: null },
-  fecha_baja: { type: Date, default: null },
+  user_create: { type: String, default: null },
+  user_modify: { type: String, default: null },
+  date_create: { type: String, default: null },
+  last_modify: { type: String, default: null },
   enabled: { type: Boolean, default: true }
 });
 
