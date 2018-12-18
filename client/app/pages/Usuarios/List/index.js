@@ -20,7 +20,7 @@ class List extends Component {
   }
 
   componentDidMount() {
-    UsuariosContainer.onLoadUsuarios()
+    UsuariosContainer.onLoadUsuarios();    
   }
 
   render() {

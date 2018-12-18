@@ -46,21 +46,28 @@ class UsuariosContainer extends Container {
         statusTitle: ''
       },
       loading: {
-        roles: false,
-        alumnos: false,
-        profesores: false
+        roles: false
       },
       errors: [],
       roles: [],
-      alumnos: [],
-      profesores: []
+      alumnos: {
+        list: [],
+        loading: false,
+        value: ''
+      },
+      profesores: {
+        list: [],
+        loading: false,
+        value: ''
+      }
     }
   }
 
   onLoadUsuarios() {
     let list = fetch('/api/users').then(res => res.json())
     Promise.all([list]).then(values => {
-      const usuarios = values[0]
+      console.log("values", values)
+      const usuarios = values[0].filter(row => row.user !== SecurityContainer.state.user)
       this.setState({
         usuarios
       })
@@ -73,7 +80,8 @@ class UsuariosContainer extends Container {
   onLoadRoles() {
     this.setLoading({roles: true})
     let list = fetch('/api/roles').then(res => res.json())
-    Promise.all([list]).then(values => {      
+    Promise.all([list]).then(values => {
+      console.log("roles", values)
       const roles = values[0]
       this.setState({
         roles
@@ -84,35 +92,42 @@ class UsuariosContainer extends Container {
     })
   }
 
-  onLoadAlumnos() {
-    this.setLoading({alumnos: true})
+  onLoadAlumnos(dni) {
+    this.setParams('alumnos', {loading: true})
     let list = fetch('/api/alumnos').then(res => res.json())
     Promise.all([list]).then(values => {      
-      const alumnos = values[0]
-      this.setState({
-        alumnos
-      }, () => this.setLoading({alumnos: false}))
+      const list = values[0]
+      const value = dni ? list.filter(row => row.dni === dni)[0] : ''
+      this.setParams('alumnos', {
+        list,
+        loading: false,
+        value
+      })
     }).catch(error => {
       console.log("Error al obtener los alumnos", error)
-      this.setState({alumnos: []}, () => this.setLoading({alumnos: false}))
+      this.setParams('alumnos', {list: [], loading: false, value: ''})
     })
   }
 
-  onLoadProfesores() {
-    this.setLoading({profesores: true})
+  onLoadProfesores(dni) {
+    this.setParams('profesores', {loading: true})
     let list = fetch('/api/instructors').then(res => res.json())
     Promise.all([list]).then(values => {      
-      const profesores = values[0]
-      this.setState({
-        profesores
-      }, () => this.setLoading({profesores: false}))
+      const list = values[0];
+      const value = dni ? list.filter(row => row.dni === dni)[0] : ''
+      this.setParams('profesores', {
+        list,
+        loading: false,
+        value
+      })
     }).catch(error => {
       console.log("Error al obtener los profesores", error)
-      this.setState({profesores: []}, () => this.setLoading({profesores: false}))
+      this.setParams('profesores', {list: [], loading: false, value: ''})
     })
   }
 
   setUsuario(params, callback) {
+    console.log("params", params)
     const newState = state => {
       return {
         usuario: Object.assign({}, state.usuario, params)
@@ -139,6 +154,19 @@ class UsuariosContainer extends Container {
         loading: Object.assign({}, state.loading, params)
       }
     })
+  }
+
+  setParams(name, params, callback) {
+    const newState = state => {
+      return {
+        [name]: Object.assign({}, state[name], params)
+      }
+    }
+    if (callback) {
+      this.setState(newState, callback)
+    } else {
+      this.setState(newState)
+    }
   }
 
   setStateParams(name, value) {
@@ -176,6 +204,8 @@ class UsuariosContainer extends Container {
       usuario: initUsuario(),
       configTitle: 'Nuevo Usuario',
       errors: []
+    }, () => {
+      this.onLoadRoles();      
     })
   }
 
@@ -185,10 +215,12 @@ class UsuariosContainer extends Container {
       usuario: row,
       configTitle: 'Modificar Usuario',
       errors: []
-    }, () => {      
-      // this.onLoadLocalidades()
-      //TODO -> onLoadRoles(); onLoadAlumnos(); onLoadProfesores();
-      callback()
+    }, () => {
+      //TODO -> onLoadRoles(); onLoadAlumnos(); onLoadProfesores();      
+      this.onLoadRoles();
+      if (row.role.name === 'instructor') this.onLoadProfesores(row.id_profesor);
+      if (row.role.name === 'student') this.onLoadAlumnos(row.id_alumno);
+      callback();
     })
   }
 
@@ -342,8 +374,9 @@ class UsuariosContainer extends Container {
     (pass.length === 0) && errors.push('pass');
     (email.length === 0) && errors.push('email');
     (role.length === 0) && errors.push('role');
-    (id_alumno.length === 0) && errors.push('id_alumno');
-    (id_profesor.length === 0) && errors.push('id_profesor');    
+    if (role.name === 'instructor') (id_profesor.length === 0) && errors.push('id_profesor');
+    if (role.name === 'student') (id_alumno.length === 0) && errors.push('id_alumno');
+    
 
     this.setState({ errors: errors });
 

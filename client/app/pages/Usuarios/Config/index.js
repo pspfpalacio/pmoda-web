@@ -26,8 +26,8 @@ class Config extends Component {
 
   componentDidMount() {
     UsuariosContainer.onLoadRoles()
-    UsuariosContainer.onLoadProfesores()
-    UsuariosContainer.onLoadAlumnos()
+    // UsuariosContainer.onLoadProfesores()
+    // UsuariosContainer.onLoadAlumnos()
   }
 
   onClickVisible(event) {    
@@ -70,12 +70,22 @@ class Config extends Component {
                 onChange={(e) => usuariosContainer.setUsuario({'lastname': e.target.value})}
               />
               <TextField
+                name="email"
+                hintText="Correo"
+                floatingLabelText="Correo"
+                floatingLabelFixed={true}
+                fullWidth={true}
+                value={usuariosContainer.state.usuario.email}
+                errorText={usuariosContainer.onRequiredInput('email')}
+                onChange={(e) => usuariosContainer.setUsuario({'email': e.target.value})}
+              />
+              <TextField
                 name="user"
                 hintText="Username"
                 floatingLabelText="Username"
                 floatingLabelFixed={true}
                 fullWidth={true}
-                value={usuariosContainer.state.usuario.name}
+                value={usuariosContainer.state.usuario.user}
                 errorText={usuariosContainer.onRequiredInput('user')}
                 onChange={(e) => usuariosContainer.setUsuario({'user': e.target.value})}
               />
@@ -98,30 +108,78 @@ class Config extends Component {
                   onCheck={(e) => this.onClickVisible(e)}
                   checked={this.state.visiblePass}
                 />
-              </div>
-              
-              <div className="ui-label__select">Rol</div>
-              <div style={{width: "69%"}}>
+              </div>              
+            </div>
+            <div style={{display: "flex"}}>
+              <div style={{width: "45%", padding: "0 40px 10px 40px"}}>
+                <div className="ui-label__select">Rol</div>                
                 <Select
                   placeholder="Seleccione..."
                   options={usuariosContainer.state.roles}
                   getOptionLabel={(option) => option.description}
-                  getOptionValue={(option) => option._id}
+                  getOptionValue={(option) => option.name}
                   isClearable={true}
                   loadingPlaceholder="Cargando..."
                   noResultsText="No se encontraron roles"
                   isLoading={usuariosContainer.state.loading.roles}
                   value={usuariosContainer.state.usuario.role}
-                  onChange={value => usuariosContainer.setUsuario({ role: value })}
+                  onChange={value => usuariosContainer.setUsuario({ role: value }, () => {
+                    if (value.name === 'instructor') {
+                      usuariosContainer.onLoadProfesores();
+                    }
+                    if (value.name === 'student') {
+                      usuariosContainer.onLoadAlumnos();
+                    }
+                  })}
                 />
-              </div>
+              </div>                
+              
+              {usuariosContainer.state.usuario.role.name === 'instructor' ?
+                <div style={{width: "45%", padding: "0 40px 10px 40px"}}>
+                  <div className="ui-label__select">Profesores</div>              
+                  <Select
+                    placeholder="Seleccione..."
+                    options={usuariosContainer.state.profesores.list}
+                    getOptionLabel={(option) => `${option.lastname}, ${option.name} (DNI:${option.dni})`}
+                    getOptionValue={(option) => option.dni}
+                    isClearable={true}
+                    loadingPlaceholder="Cargando..."
+                    noResultsText="No se encontraron profesores"
+                    isLoading={usuariosContainer.state.profesores.loading}
+                    value={usuariosContainer.state.profesores.value}
+                    onChange={value => usuariosContainer.setParams('profesores', { value }, () => {                      
+                      usuariosContainer.setUsuario({'id_profesor': value.dni});                        
+                    })}
+                  />
+                </div>
+              : null}
+
+              {usuariosContainer.state.usuario.role.name === 'student' ?
+                <div style={{width: "45%", padding: "0 40px 10px 40px"}}>
+                  <div className="ui-label__select">Alumnos</div>              
+                  <Select
+                    placeholder="Seleccione..."
+                    options={usuariosContainer.state.alumnos.list}
+                    getOptionLabel={(option) => `${option.lastname}, ${option.name} (DNI:${option.dni})`}
+                    getOptionValue={(option) => option.dni}
+                    isClearable={true}
+                    loadingPlaceholder="Cargando..."
+                    noResultsText="No se encontraron alumnos"
+                    isLoading={usuariosContainer.state.alumnos.loading}
+                    value={usuariosContainer.state.alumnos.value}
+                    onChange={value => usuariosContainer.setParams('alumnos', { value }, () => {                      
+                      usuariosContainer.setUsuario({'id_alumno': value.dni});                        
+                    })}
+                  />
+                </div>
+              : null}                
             </div>
             <div className="form__action-buttons">                        
               <FlatButton
                 className="button__confirm"
                 label="Aceptar"
                 primary={true}                            
-                onClick={() => alumnosContainer.onAcept()}
+                onClick={() => usuariosContainer.onAcept()}
               />
               <FlatButton
                   label="Volver"

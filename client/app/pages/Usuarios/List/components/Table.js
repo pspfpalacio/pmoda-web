@@ -51,7 +51,8 @@ const getColumns = (usuariosContainer, history) => {
     },
     {
       Header: 'Rol',
-      accessor: 'role'
+      accessor: 'role',
+      Cell: row => <span>{row.value.description}</span>
     },
     {
       Header: () => "Estado",
@@ -73,7 +74,7 @@ const getColumns = (usuariosContainer, history) => {
         <span style={{cursor: 'pointer'}}>
           <MdModeEdit 
             onClick={() => {              
-              usuariosContainer.onEditAlumno(row.original, () => navigate.to(history, "/usuarios/config"));
+              usuariosContainer.onEditUsuario(row.original, () => navigate.to(history, "/usuarios/config"));
             }}
           />
         </span>

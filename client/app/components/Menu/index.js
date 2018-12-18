@@ -35,6 +35,7 @@ const Menu = (props) => (
             key={3}
             primaryText="Alumnos"
           /></Link> */}
+          <Subheader>Configuraciones</Subheader>
           <ListItem
             key={2}
             primaryText="Cursos"
