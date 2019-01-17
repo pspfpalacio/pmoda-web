@@ -62,9 +62,10 @@ class AlumnosContainer extends Container {
   }
 
   onLoadAlumnos() {
+    let office = SecurityContainer.state.offices.value;
     let list = fetch('/api/alumnos').then(res => res.json())
-    Promise.all([list]).then(values => {
-      const alumnos = values[0]
+    Promise.all([list]).then(values => {      
+      const alumnos = office.name === 'all' ? values[0] : values[0].filter(it => it.office.name === office.name);
       this.setState({
         alumnos
       })
@@ -165,15 +166,15 @@ class AlumnosContainer extends Container {
     })
   }
 
-  onEditAlumno(row, callback) {
-    console.log("alumno", row)
+  onEditAlumno(row, callback) {    
     this.setState({
       alumno: row,
       configTitle: 'Modificar Alumno',
       errors: []
-    }, () => {      
-      this.onLoadLocalidades()
-      callback()
+    }, () => {
+      SecurityContainer.setParams('offices', {value: row.office});
+      this.onLoadLocalidades();
+      callback();
     })
   }
 
@@ -393,6 +394,7 @@ class AlumnosContainer extends Container {
       address_postcode,
       provincia: provincia,
       location: location,
+      office: SecurityContainer.state.offices.value,
       user_alta: SecurityContainer.state.user,
       fecha_alta: moment().format()
     }
@@ -460,6 +462,7 @@ class AlumnosContainer extends Container {
       address_postcode,
       provincia: provincia,
       location: location,
+      office: SecurityContainer.state.offices.value,
       user_mod: SecurityContainer.state.user,
       fecha_mod: moment().format()
     }

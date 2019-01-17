@@ -4,7 +4,7 @@ import {
   Redirect
 } from "react-router-dom";
 
-const { Subscribe } = require("unstated")
+const { Subscribe } = require("unstated");
 const SecurityContainer = require('../../containers/SecurityContainer');
 
 const PrivateRoute = ({ component: Component }) => (

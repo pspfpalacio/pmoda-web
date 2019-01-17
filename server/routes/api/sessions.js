@@ -51,6 +51,13 @@ module.exports = (app) => {
       .catch((err) => next(err));
   });
 
+  app.put('/api/sessions_status/:id', (req, res, next) => {
+    Session.updateOne(
+      {sessionId: {$eq: req.params.id}}, 
+      {$set: { "enabled" : req.body.status }}
+    ).then((resp) => res.json(resp)).catch(err => next(err))
+  })
+
 //   app.put('/api/counters/:id/decrement', (req, res, next) => {
 //     Counter.findById(req.params.id)
 //       .exec()

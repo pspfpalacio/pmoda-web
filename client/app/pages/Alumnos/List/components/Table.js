@@ -2,6 +2,7 @@ const React = require('react')
 const { Subscribe } = require('unstated')
 
 const AlumnosContainer = require("../../../../containers/AlumnosContainer")
+const SecurityContainer = require("../../../../containers/SecurityContainer")
 
 const navigate = require("../../../../../services/navigate")
 
@@ -11,9 +12,11 @@ const { MdModeEdit } = require('react-icons/md')
 const Status = require("./Status")
 
 import Checkbox from 'material-ui/Checkbox';
+import IconButton from 'material-ui/IconButton';
+import Autorenew from 'material-ui/svg-icons/action/autorenew';
 import { withRouter } from 'react-router-dom';
 
-const getColumns = (alumnosContainer, history) => {
+const getColumns = (alumnosContainer, securityContainer, history) => {
   return [
     {
       accessor: 'name',
@@ -79,6 +82,14 @@ const getColumns = (alumnosContainer, history) => {
       }
     },
     {
+      Header: 'Sucursal',
+      accessor: 'office',
+      show: (securityContainer.state.authUser.office.name === 'all') ? true : false,
+      Cell: row => (
+        <span>{row.original.office.description}</span>
+      )
+    },
+    {
       Header: () => "Estado",
       getHeaderProps: (state, rowInfo, column) => {
         return {
@@ -117,24 +128,31 @@ const getColumns = (alumnosContainer, history) => {
 
 const Table = (props) => (
   <Subscribe
-    to={[AlumnosContainer]}>{(alumnosContainer) => {
+    to={[AlumnosContainer, SecurityContainer]}>{(alumnosContainer, securityContainer) => {
     const { history } = props
     return (
-      <ReactTable        
-        data={alumnosContainer.state.alumnos}
-        columns={getColumns(alumnosContainer, history)}
-        defaultPageSize={10} 
-        showPagination={true}
-        noDataText="No se encontraron alumnos."
-        loadingText="Cargando..."
-        previousText="Anterior"
-        nextText="Siguiente"
-        pageText="Página"
-        ofText="de"
-        rowsText="filas"
-        pageSizeOptions={[10, 20, 25, 50]}
-        className="-striped -highlight withdrawals-table"        
-      />
+      <React.Fragment>
+        <div className="actions">
+          <IconButton tooltip="Refrescar" onClick={() => alumnosContainer.onLoadAlumnos()}>
+            <Autorenew />
+          </IconButton>
+        </div>
+        <ReactTable
+          data={alumnosContainer.state.alumnos}
+          columns={getColumns(alumnosContainer, securityContainer, history)}
+          defaultPageSize={10} 
+          showPagination={true}
+          noDataText="No se encontraron alumnos."
+          loadingText="Cargando..."
+          previousText="Anterior"
+          nextText="Siguiente"
+          pageText="Página"
+          ofText="de"
+          rowsText="filas"
+          pageSizeOptions={[10, 20, 25, 50]}
+          className="-striped -highlight withdrawals-table"        
+        />
+      </React.Fragment>      
     )
   }}</Subscribe>
 );

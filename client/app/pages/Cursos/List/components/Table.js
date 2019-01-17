@@ -1,7 +1,8 @@
-const React = require('react')
-const {Subscribe} = require('unstated')
+const React = require('react');
+const {Subscribe} = require('unstated');
 
-const CursosContainer = require("../../../../containers/CursosContainer")
+const CursosContainer = require("../../../../containers/CursosContainer");
+const SecurityContainer = require("../../../../containers/SecurityContainer");
 
 const navigate = require("../../../../../services/navigate")
 
@@ -11,9 +12,11 @@ const {MdModeEdit, MdDelete} = require('react-icons/md')
 const Status = require("./Status")
 
 import Checkbox from 'material-ui/Checkbox';
+import IconButton from 'material-ui/IconButton';
+import Autorenew from 'material-ui/svg-icons/action/autorenew';
 import { withRouter } from 'react-router-dom';
 
-const getColumns = (cursosContainer, history) => {
+const getColumns = (cursosContainer, securityContainer, history) => {
   return [
     {
       accessor: 'nombre',
@@ -53,6 +56,14 @@ const getColumns = (cursosContainer, history) => {
       accessor: 'costoMatricula',
       Cell: row => (
         <span>$ {row.original.costoMatricula}</span>
+      )
+    },
+    {
+      Header: 'Sucursal',
+      accessor: 'office',
+      show: (securityContainer.state.authUser.office.name === 'all') ? true : false,
+      Cell: row => (
+        <span>{row.original.office.description}</span>
       )
     },
     {
@@ -96,26 +107,33 @@ const getColumns = (cursosContainer, history) => {
 
 const CursosTable = (props) => (
   <Subscribe
-    to={[CursosContainer]}>{(cursosContainer) => {
+    to={[CursosContainer, SecurityContainer]}>{(cursosContainer, securityContainer) => {
     const { history } = props
     return (
-      <ReactTable
-        // loading={configurationContainer.state.searchLoading}
-        data={cursosContainer.state.cursos}
-        columns={getColumns(cursosContainer, history)}
-        // defaultPageSize={configurationContainer.state.teams.length} 
-        defaultPageSize={10} 
-        showPagination={true}
-        noDataText="No se encontraron cursos."
-        loadingText="Cargando..."
-        previousText="Anterior"
-        nextText="Siguiente"
-        pageText="Página"
-        ofText="de"
-        rowsText="filas"
-        pageSizeOptions={[10, 20, 25, 50]}
-        className="-striped -highlight withdrawals-table"        
-      />
+      <React.Fragment>
+        <div className="actions">
+          <IconButton tooltip="Refrescar" onClick={() => cursosContainer.onLoadCursos()}>
+            <Autorenew />
+          </IconButton>
+        </div>
+        <ReactTable
+          // loading={configurationContainer.state.searchLoading}
+          data={cursosContainer.state.cursos}
+          columns={getColumns(cursosContainer, securityContainer, history)}
+          // defaultPageSize={configurationContainer.state.teams.length} 
+          defaultPageSize={10} 
+          showPagination={true}
+          noDataText="No se encontraron cursos."
+          loadingText="Cargando..."
+          previousText="Anterior"
+          nextText="Siguiente"
+          pageText="Página"
+          ofText="de"
+          rowsText="filas"
+          pageSizeOptions={[10, 20, 25, 50]}
+          className="-striped -highlight withdrawals-table"        
+        />
+      </React.Fragment>      
     )
   }}</Subscribe>
 );

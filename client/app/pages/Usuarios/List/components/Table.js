@@ -2,6 +2,7 @@ const React = require('react')
 const { Subscribe } = require('unstated')
 
 const UsuariosContainer = require("../../../../containers/UsuariosContainer")
+const SecurityContainer = require("../../../../containers/SecurityContainer")
 
 const navigate = require("../../../../../services/navigate")
 
@@ -11,9 +12,11 @@ const { MdModeEdit } = require('react-icons/md')
 const Status = require("./Status")
 
 import Checkbox from 'material-ui/Checkbox';
+import IconButton from 'material-ui/IconButton';
+import Autorenew from 'material-ui/svg-icons/action/autorenew';
 import { withRouter } from 'react-router-dom';
 
-const getColumns = (usuariosContainer, history) => {
+const getColumns = (usuariosContainer, securityContainer, history) => {
   return [
     {
       accessor: 'name',
@@ -55,6 +58,14 @@ const getColumns = (usuariosContainer, history) => {
       Cell: row => <span>{row.value.description}</span>
     },
     {
+      Header: 'Sucursal',
+      accessor: 'office',
+      show: (securityContainer.state.authUser.office.name === 'all') ? true : false,
+      Cell: row => (
+        <span>{row.original.office.description}</span>
+      )
+    },
+    {
       Header: () => "Estado",
       getHeaderProps: (state, rowInfo, column) => {
         return {
@@ -93,24 +104,31 @@ const getColumns = (usuariosContainer, history) => {
 
 const Table = (props) => (
   <Subscribe
-    to={[UsuariosContainer]}>{(usuariosContainer) => {
+    to={[UsuariosContainer, SecurityContainer]}>{(usuariosContainer, securityContainer) => {
     const { history } = props
     return (
-      <ReactTable        
-        data={usuariosContainer.state.usuarios}
-        columns={getColumns(usuariosContainer, history)}
-        defaultPageSize={10} 
-        showPagination={true}
-        noDataText="No se encontraron usuarios."
-        loadingText="Cargando..."
-        previousText="Anterior"
-        nextText="Siguiente"
-        pageText="Página"
-        ofText="de"
-        rowsText="filas"
-        pageSizeOptions={[10, 20, 25, 50]}
-        className="-striped -highlight"        
-      />
+      <React.Fragment>
+        <div className="actions">
+          <IconButton tooltip="Refrescar" onClick={() => usuariosContainer.onLoadUsuarios()}>
+            <Autorenew />
+          </IconButton>
+        </div>
+        <ReactTable        
+          data={usuariosContainer.state.usuarios}
+          columns={getColumns(usuariosContainer, securityContainer, history)}
+          defaultPageSize={10} 
+          showPagination={true}
+          noDataText="No se encontraron usuarios."
+          loadingText="Cargando..."
+          previousText="Anterior"
+          nextText="Siguiente"
+          pageText="Página"
+          ofText="de"
+          rowsText="filas"
+          pageSizeOptions={[10, 20, 25, 50]}
+          className="-striped -highlight"        
+        />
+      </React.Fragment>
     )
   }}</Subscribe>
 );

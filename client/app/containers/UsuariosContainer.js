@@ -64,10 +64,12 @@ class UsuariosContainer extends Container {
   }
 
   onLoadUsuarios() {
+    let office = SecurityContainer.state.offices.value;
     let list = fetch('/api/users').then(res => res.json())
     Promise.all([list]).then(values => {
       console.log("values", values)
-      const usuarios = values[0].filter(row => row.user !== SecurityContainer.state.user)
+      const prevUsers = office.name === 'all' ? values[0] : values[0].filter(it => it.office.name === office.name);
+      const usuarios = prevUsers.filter(row => row.user !== SecurityContainer.state.user)
       this.setState({
         usuarios
       })
@@ -209,13 +211,13 @@ class UsuariosContainer extends Container {
     })
   }
 
-  onEditUsuario(row, callback) {
-    console.log("usuario", row)
+  onEditUsuario(row, callback) {    
     this.setState({
       usuario: row,
       configTitle: 'Modificar Usuario',
       errors: []
     }, () => {
+      SecurityContainer.setParams('offices', {value: row.office});
       //TODO -> onLoadRoles(); onLoadAlumnos(); onLoadProfesores();      
       this.onLoadRoles();
       if (row.role.name === 'instructor') this.onLoadProfesores(row.id_profesor);
@@ -402,7 +404,7 @@ class UsuariosContainer extends Container {
   }
 
   createUsuario(callback) {
-    const {
+    let {
       name,
       lastname,
       user,
@@ -413,6 +415,9 @@ class UsuariosContainer extends Container {
       id_profesor
     } = this.state.usuario;
 
+    if (role.name === 'instructor' || role.name === 'administrator') id_alumno = null;
+    if (role.name === 'student' || role.name === 'administrator') id_profesor = null;
+
     const body = {
       name,
       lastname,
@@ -422,6 +427,7 @@ class UsuariosContainer extends Container {
       role,
       id_alumno,
       id_profesor,
+      office: SecurityContainer.state.offices.value,
       user_create: SecurityContainer.state.user,
       date_create: moment().format()
     }
@@ -441,22 +447,22 @@ class UsuariosContainer extends Container {
         callback();
         this.setStateModal({confirm: false});
         UIContainer.Instance.closeSpinner();
-        UIContainer.Instance.showSnackbar("Usuario creado correctamente", "success", "CERRAR");
+        UIContainer.Instance.showSnackbar("Éxito! Usuario creado correctamente", "success", "CERRAR");
       } else {
         this.setStateModal({confirm: false});
         UIContainer.Instance.closeSpinner();
-        UIContainer.Instance.showSnackbar("Ocurrió un error al crear el usuario", "error", "CERRAR");
+        UIContainer.Instance.showSnackbar("Error! Ocurrió un error al crear el usuario", "error", "CERRAR");
       }
     }).catch(error => {
       console.log("error", error)
       this.setStateModal({confirm: false})
       UIContainer.Instance.closeSpinner()      
-      UIContainer.Instance.showSnackbar("Ocurrió un error al crear el usuario", "error", "CERRAR")
+      UIContainer.Instance.showSnackbar("Error! Ocurrió un error al crear el usuario", "error", "CERRAR")
     })
   }
 
   updateUsuario(callback) {
-    const {
+    let {
       name,
       lastname,
       user,
@@ -467,6 +473,9 @@ class UsuariosContainer extends Container {
       id_profesor
     } = this.state.usuario;
 
+    if (role.name === 'instructor' || role.name === 'administrator') id_alumno = null;
+    if (role.name === 'student' || role.name === 'administrator') id_profesor = null;
+
     const body = {
       name,
       lastname,
@@ -476,6 +485,7 @@ class UsuariosContainer extends Container {
       role,
       id_alumno,
       id_profesor,
+      office: SecurityContainer.state.offices.value,
       user_modify: SecurityContainer.state.user,
       last_modify: moment().format()
     }
@@ -493,17 +503,17 @@ class UsuariosContainer extends Container {
         callback()
         this.setStateModal({confirm: false})
         UIContainer.Instance.closeSpinner()
-        UIContainer.Instance.showSnackbar("Usuario actualizado correctamente", "success", "CERRAR")
+        UIContainer.Instance.showSnackbar("Éxito! Usuario actualizado correctamente", "success", "CERRAR")
       } else {
         this.setStateModal({confirm: false})
         UIContainer.Instance.closeSpinner()
-        UIContainer.Instance.showSnackbar("Ocurrió un error al actualizar el usuario", "error", "CERRAR")
+        UIContainer.Instance.showSnackbar("Error! Ocurrió un error al actualizar el usuario", "error", "CERRAR")
       }
     }).catch(error => {
       this.setStateModal({confirm: false})
       console.log("error", error)
       UIContainer.Instance.closeSpinner()      
-      UIContainer.Instance.showSnackbar("Ocurrió un error al actualizar el usuario", "error", "CERRAR")
+      UIContainer.Instance.showSnackbar("Error! Ocurrió un error al actualizar el usuario", "error", "CERRAR")
     })
   }
 

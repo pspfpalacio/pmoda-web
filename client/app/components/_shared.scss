@@ -1,1 +1,16 @@
 @import './Spinner/index';
+
+.content__sucursal {
+  display: flex;
+  align-items: center; 
+  padding: 5px 12px 12px 20px;
+
+  .select-sucursal {
+    width: 30%; 
+    margin-left: 5px;
+  }
+  .label-sucursal {
+    font-size: 1.3em;
+    padding: 0 0 0.2em 0.2em;
+  }
+}

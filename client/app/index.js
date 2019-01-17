@@ -21,6 +21,7 @@ import Inscipcion from './pages/Inscripciones/Inscripcion';
 import CursosConfig from './pages/Cursos/Config';
 import CursosList from './pages/Cursos/List';
 
+const Sucursal = require("./components/Sucursal");
 const AlumnosConfig = require('./pages/Alumnos/Config')
 const AlumnosList = require('./pages/Alumnos/List')
 const ProfesorConfig = require('./pages/Profesores/Config')
@@ -37,50 +38,54 @@ import './styles/styles.scss';
 const { Provider } = require("unstated")
 const { Subscribe } = require("unstated")
 
-const UIContainer = require("./containers/UIContainer")
+const UIContainer = require("./containers/UIContainer");
+const SecurityContainer = require("./containers/SecurityContainer");
 
 render((
   <Router>
     <Provider>
       <MuiThemeProvider>
-        <Subscribe to={[UIContainer]}>{(uiContainer) => (
+        <Subscribe to={[UIContainer, SecurityContainer]}>{(uiContainer, securityContainer) => (
           <App>
-            <Card style={{padding: "30px"}}>
-              <Switch>
-                <PrivateRoute exact path="/" component={Home}/>
-                <Route path="/login" component={Login} />
-                <PrivateRoute path="/helloworld" component={HelloWorld}/>
-                <PrivateRoute path="/inscripcion" component={Inscipcion}/>
-                {/* <PrivateRoute path="/cursos" component={Cursos}/> */}
-                <PrivateRoute path="/cursos/list" component={CursosList}/>
-                <PrivateRoute path="/cursos/config" component={CursosConfig}/>
-                <PrivateRoute path="/alumnos/list" component={AlumnosList}/>
-                <PrivateRoute path="/alumnos/config" component={AlumnosConfig}/>
-                <PrivateRoute path="/profesors/list" component={ProfesorList}/>
-                <PrivateRoute path="/profesors/config" component={ProfesorConfig}/>
-                <PrivateRoute path="/usuarios/list" component={UsuariosList}/>
-                <PrivateRoute path="/usuarios/config" component={UsuariosConfig}/>
-                <Route component={NotFound}/>
-              </Switch>
+            <React.Fragment>
+              {securityContainer.state.isAuthenticated && <Sucursal />}              
+              <Card style={{padding: "30px"}}>
+                <Switch>
+                  <PrivateRoute exact path="/" component={Home}/>
+                  <Route path="/login" component={Login} />
+                  <PrivateRoute path="/helloworld" component={HelloWorld}/>
+                  <PrivateRoute path="/inscripcion" component={Inscipcion}/>
+                  {/* <PrivateRoute path="/cursos" component={Cursos}/> */}
+                  <PrivateRoute path="/cursos/list" component={CursosList}/>
+                  <PrivateRoute path="/cursos/config" component={CursosConfig}/>
+                  <PrivateRoute path="/alumnos/list" component={AlumnosList}/>
+                  <PrivateRoute path="/alumnos/config" component={AlumnosConfig}/>
+                  <PrivateRoute path="/profesors/list" component={ProfesorList}/>
+                  <PrivateRoute path="/profesors/config" component={ProfesorConfig}/>
+                  <PrivateRoute path="/usuarios/list" component={UsuariosList}/>
+                  <PrivateRoute path="/usuarios/config" component={UsuariosConfig}/>
+                  <Route component={NotFound}/>
+                </Switch>
 
-              <Snackbar
-                open={uiContainer.state.snackbar.open}
-                message={uiContainer.state.snackbar.message}
-                // autoHideDuration={uiContainer.state.autoHideDuration}
-                action={uiContainer.state.snackbar.action}
-                // onRequestClose={() => uiContainer.closeSnackbar()}
-                onActionClick={() => uiContainer.closeSnackbar()}
-              />
+                <Snackbar
+                  open={uiContainer.state.snackbar.open}
+                  message={uiContainer.state.snackbar.message}
+                  // autoHideDuration={uiContainer.state.autoHideDuration}
+                  action={uiContainer.state.snackbar.action}
+                  // onRequestClose={() => uiContainer.closeSnackbar()}
+                  onActionClick={() => uiContainer.closeSnackbar()}
+                />
 
-              <Spinner 
-                size={uiContainer.state.spinner.size}
-                thickness={uiContainer.state.spinner.thickness}
-                show={uiContainer.state.spinner.show}
-                modifier={uiContainer.state.spinner.modifier}
-                label={uiContainer.state.spinner.label}
-                // className
-              />
-            </Card>
+                <Spinner 
+                  size={uiContainer.state.spinner.size}
+                  thickness={uiContainer.state.spinner.thickness}
+                  show={uiContainer.state.spinner.show}
+                  modifier={uiContainer.state.spinner.modifier}
+                  label={uiContainer.state.spinner.label}
+                  // className
+                />
+              </Card>
+            </React.Fragment>
           </App>
         )}</Subscribe>        
       </MuiThemeProvider>

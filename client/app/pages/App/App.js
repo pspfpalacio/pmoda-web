@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 // import Menu from '../../components/Menu/Menu';
-import UserBar from '../../components/UserBar/UserBar';
+// import UserBar from '../../components/UserBar/UserBar';
 
-const Menu = require("../../components/Menu")
+const Menu = require("../../components/Menu");
+const UserBar = require("../../components/UserBar");
+const Sucursal = require("../../components/Sucursal");
 
 const App = ({ children }) => (
   <>
@@ -13,7 +15,8 @@ const App = ({ children }) => (
       <UserBar/>
       <div className="main-container">
         <Menu />
-        <div className="main-content" >
+        <div className="main-content">
+          {/* <Sucursal /> */}
           {children}
         </div>
       </div>

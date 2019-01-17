@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const InstructorSchema = new mongoose.Schema({
-  office: { type: String, default: null },
+  office: { type: Object, default: null },
   dni: { type: Number, unique: true, default: 0 },
   name: { type: String, default: null },
   lastname: { type: String, default: null },

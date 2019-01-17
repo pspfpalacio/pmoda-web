@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const CursoSchema = new mongoose.Schema({
-  office: { type: String, default: null },
+  office: { type: Object, default: null },
   nombre: { type: String, default: null },
   diasCursado: { type: String, default: null },
   cantHoras: { type: Number, default: 0 },

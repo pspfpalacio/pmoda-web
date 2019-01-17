@@ -41,9 +41,10 @@ class CursosContainer extends Container {
   }
 
   onLoadCursos() {
+    let office = SecurityContainer.state.offices.value;
     let listCursos = fetch('/api/cursos').then(res => res.json())
     Promise.all([listCursos]).then(values => {
-      const cursos = values[0]
+      const cursos = office.name === 'all' ? values[0] : values[0].filter(it => it.office.name === office.name);
       this.setState({
         cursos
       })
@@ -112,7 +113,7 @@ class CursosContainer extends Container {
       costoCurso: curso.costoCurso,
       costoMatricula: curso.costoMatricula,
       errors: []
-    })
+    }, () => SecurityContainer.setParams('offices', {value: curso.office}));
   }
 
   closeModal() {
@@ -166,6 +167,7 @@ class CursosContainer extends Container {
       duracionMeses: this.state.duracionMeses,
       costoCurso: this.state.costoCurso,
       costoMatricula: this.state.cantHoras,
+      office: SecurityContainer.state.offices.value,
       userAlta: SecurityContainer.state.user,
       fechaAlta: moment().format()
     }
@@ -206,6 +208,7 @@ class CursosContainer extends Container {
       duracionMeses: this.state.duracionMeses,
       costoCurso: this.state.costoCurso,
       costoMatricula: this.state.costoMatricula,
+      office: SecurityContainer.state.offices.value,
       user_mod: SecurityContainer.state.user,
       fecha_mod: moment().format()
     }

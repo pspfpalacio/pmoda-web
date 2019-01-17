@@ -62,9 +62,10 @@ class ProfesorContainer extends Container {
   }
 
   onLoadProfesores() {
+    let office = SecurityContainer.state.offices.value;
     let list = fetch('/api/instructors').then(res => res.json())
     Promise.all([list]).then(values => {
-      const profesores = values[0]
+      const profesores = office.name === 'all' ? values[0] : values[0].filter(it => it.office.name === office.name);
       this.setState({
         profesores
       })
@@ -170,9 +171,10 @@ class ProfesorContainer extends Container {
       profesor: row,
       configTitle: 'Modificar Profesor',
       errors: []
-    }, () => {      
-      this.onLoadLocalidades()
-      callback()
+    }, () => {
+      SecurityContainer.setParams('offices', {value: row.office});
+      this.onLoadLocalidades();
+      callback();
     })
   }
 
@@ -392,6 +394,7 @@ class ProfesorContainer extends Container {
       address_postcode,
       provincia: provincia,
       location: location,
+      office: SecurityContainer.state.offices.value,
       user_alta: SecurityContainer.state.user,
       fecha_alta: moment().format()
     }
@@ -459,6 +462,7 @@ class ProfesorContainer extends Container {
       address_postcode,
       provincia: provincia,
       location: location,
+      office: SecurityContainer.state.offices.value,
       user_mod: SecurityContainer.state.user,
       fecha_mod: moment().format()
     }
