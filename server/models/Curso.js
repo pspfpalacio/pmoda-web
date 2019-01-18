@@ -9,12 +9,10 @@ const CursoSchema = new mongoose.Schema({
   costoCurso: { type: Number, default: 0 },
   costoMatricula: { type: Number, default: 0 },
   costoTotal: { type: Number, default: 0 },
-  user_alta: { type: String, default: null },
-  user_mod: { type: String, default: null },
-  user_baja: { type: String, default: null },
-  fecha_alta: { type: String, default: null },
-  fecha_mod: { type: String, default: null },
-  fecha_baja: { type: String, default: null },
+  user_create: { type: String, default: null },
+  user_modify: { type: String, default: null },
+  date_create: { type: String, default: null },
+  last_modify: { type: String, default: null },
   enabled: { type: Boolean, default: true }
 });
 

@@ -11,14 +11,14 @@ module.exports = (app) => {
   app.post('/api/cursos', function (req, res, next) {
     let body = req.body;
 
-    const curso = new Curso();
-    curso.nombre = body.nombre
-    curso.cantHoras = body.cantHoras
-    curso.duracionMeses = body.duracionMeses
-    curso.costoCurso = body.costoCurso
-    curso.costoMatricula = body.costoMatricula
-    curso.user_alta = body.userAlta
-    curso.fecha_alta = body.fechaAlta
+    const curso = new Curso(body);
+    // curso.nombre = body.nombre
+    // curso.cantHoras = body.cantHoras
+    // curso.duracionMeses = body.duracionMeses
+    // curso.costoCurso = body.costoCurso
+    // curso.costoMatricula = body.costoMatricula
+    // curso.user_alta = body.userAlta
+    // curso.fecha_alta = body.fechaAlta
 
     curso.save()
       .then(() => res.json(curso))
@@ -40,7 +40,7 @@ module.exports = (app) => {
   app.put('/api/cursos_status', (req, res, next) => {
     Curso.updateMany(
       {_id: {$in: req.body.ids}}, 
-      {$set: { "enabled" : req.body.toStatus, "user_mod": req.body.user, "fecha_mod": req.body.fecha }}
+      {$set: { "enabled" : req.body.toStatus, "user_modify": req.body.user, "last_modify": req.body.fecha }}
     ).then((resp) => res.json(resp)).catch(err => next(err))
   });
 };

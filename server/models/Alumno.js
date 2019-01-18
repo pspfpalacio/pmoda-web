@@ -16,10 +16,10 @@ const AlumnoSchema = new mongoose.Schema({
   address_postcode: { type: String, default: null },
   provincia: { type: Object, default: null },
   location: { type: Object, default: null },
-  user_alta: { type: String, default: null },
-  user_mod: { type: String, default: null },
-  fecha_alta: { type: String, default: null },
-  fecha_mod: { type: String, default: null },
+  user_create: { type: String, default: null },
+  user_modify: { type: String, default: null },
+  date_create: { type: String, default: null },
+  last_modify: { type: String, default: null },
   enabled: { type: Boolean, default: true }
 });
 

@@ -22,10 +22,10 @@ const initProfesor = () => {
     provincia: '',
     location: '',
     location_id: '',
-    user_alta: '',
-    user_mod: '',
-    fecha_alta: '',
-    fecha_mod: '',
+    user_create: '',
+    user_modify: '',
+    date_create: '',
+    last_modify: '',
     enabled: true
   }
 }
@@ -395,8 +395,8 @@ class ProfesorContainer extends Container {
       provincia: provincia,
       location: location,
       office: SecurityContainer.state.offices.value,
-      user_alta: SecurityContainer.state.user,
-      fecha_alta: moment().format()
+      user_create: SecurityContainer.state.user,
+      date_create: moment().format()
     }
 
     console.log("body", body)
@@ -463,8 +463,8 @@ class ProfesorContainer extends Container {
       provincia: provincia,
       location: location,
       office: SecurityContainer.state.offices.value,
-      user_mod: SecurityContainer.state.user,
-      fecha_mod: moment().format()
+      user_modify: SecurityContainer.state.user,
+      last_modify: moment().format()
     }
 
     fetch(`/api/instructors/${this.state.profesor._id}`, {

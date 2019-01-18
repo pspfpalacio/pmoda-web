@@ -1,20 +1,20 @@
-const Instructor = require('../../models/Instructor');
+const Subject = require('../../models/Subject');
 
 module.exports = (app) => {
-  app.get('/api/instructors', (req, res, next) => {
-    Instructor.find()
+  app.get('/api/subjects', (req, res, next) => {
+    Subject.find()
       .exec()
       .then((data) => res.json(data))
       .catch((err) => next(err));
   });
 
-  app.post('/api/instructors', function (req, res, next) {
+  app.post('/api/subjects', function (req, res, next) {
     let body = req.body;
 
-    const instructor = new Instructor(body);
+    const subject = new Subject(body);
 
-    instructor.save()
-      .then(() => res.json(instructor))
+    subject.save()
+      .then(() => res.json(subject))
       .catch((err) => next(err));
   });
 
@@ -25,13 +25,13 @@ module.exports = (app) => {
   //     .catch((err) => next(err));
   // });
 
-  app.put('/api/instructors/:id', (req, res, next) => {
-    Instructor.update({_id: req.params.id}, req.body)
+  app.put('/api/subjects/:id', (req, res, next) => {
+    Subject.update({_id: req.params.id}, req.body)
       .then((resp) => res.json(resp)).catch((err) => next(err))
   });
 
-  app.put('/api/instructors_status', (req, res, next) => {
-    Instructor.updateMany(
+  app.put('/api/subjects_status', (req, res, next) => {
+    Subject.updateMany(
       {_id: {$in: req.body.ids}}, 
       {$set: { "enabled" : req.body.toStatus, "user_modify": req.body.user, "last_modify": req.body.fecha }}
     ).then((resp) => res.json(resp)).catch(err => next(err))

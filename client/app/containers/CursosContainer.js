@@ -168,8 +168,8 @@ class CursosContainer extends Container {
       costoCurso: this.state.costoCurso,
       costoMatricula: this.state.cantHoras,
       office: SecurityContainer.state.offices.value,
-      userAlta: SecurityContainer.state.user,
-      fechaAlta: moment().format()
+      user_create: SecurityContainer.state.user,
+      date_create: moment().format()
     }
 
     fetch('/api/cursos', {
@@ -209,8 +209,8 @@ class CursosContainer extends Container {
       costoCurso: this.state.costoCurso,
       costoMatricula: this.state.costoMatricula,
       office: SecurityContainer.state.offices.value,
-      user_mod: SecurityContainer.state.user,
-      fecha_mod: moment().format()
+      user_modify: SecurityContainer.state.user,
+      last_modify: moment().format()
     }
 
     fetch(`/api/cursos/${this.state.curso._id}`, {

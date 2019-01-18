@@ -12,13 +12,6 @@ module.exports = (app) => {
     let body = req.body;
 
     const alumno = new Alumno(body);
-    // curso.nombre = body.nombre
-    // curso.cantHoras = body.cantHoras
-    // curso.duracionMeses = body.duracionMeses
-    // curso.costoCurso = body.costoCurso
-    // curso.costoMatricula = body.costoMatricula
-    // curso.user_alta = body.userAlta
-    // curso.fecha_alta = body.fechaAlta
 
     alumno.save()
       .then(() => res.json(alumno))
@@ -40,7 +33,7 @@ module.exports = (app) => {
   app.put('/api/alumnos_status', (req, res, next) => {
     Alumno.updateMany(
       {_id: {$in: req.body.ids}}, 
-      {$set: { "enabled" : req.body.toStatus, "user_mod": req.body.user, "fecha_mod": req.body.fecha }}
+      {$set: { "enabled" : req.body.toStatus, "user_modify": req.body.user, "last_modify": req.body.fecha }}
     ).then((resp) => res.json(resp)).catch(err => next(err))
   });
 };
