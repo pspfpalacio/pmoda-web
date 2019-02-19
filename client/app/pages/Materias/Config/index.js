@@ -9,6 +9,7 @@ const { Subscribe } = require("unstated");
 
 const Select = require("react-select").default;
 const ModalConfirm = require('../components/ModalConfirm');
+const Table = require('./components/Table');
 
 const MateriasContainer = require("../../../containers/MateriasContainer");
 const navigate = require("../../../../services/navigate");
@@ -21,7 +22,8 @@ class Config extends Component {
   }
 
   componentDidMount() {
-    MateriasContainer.onLoadProvincias()
+    MateriasContainer.onLoadCursos();
+    MateriasContainer.onLoadProfesores();
   }
 
   render() {
@@ -67,7 +69,7 @@ class Config extends Component {
                 <Select
                   placeholder="Seleccione..."
                   options={materiasContainer.state.profesores}
-                  getOptionLabel={(option) => option.name}
+                  getOptionLabel={(option) => `${option.lastname}, ${option.name}`}
                   getOptionValue={(option) => option._id}
                   isClearable={true}
                   loadingPlaceholder="Cargando..."
@@ -82,7 +84,7 @@ class Config extends Component {
                 <Select
                   placeholder="Seleccione..."
                   options={materiasContainer.state.profesores}
-                  getOptionLabel={(option) => option.name}
+                  getOptionLabel={(option) => `${option.lastname}, ${option.name}`}
                   getOptionValue={(option) => option._id}
                   isClearable={true}
                   loadingPlaceholder="Cargando..."
@@ -91,14 +93,10 @@ class Config extends Component {
                   value={materiasContainer.state.materia.instructor_alternate}
                   onChange={value => materiasContainer.setParams('materia', { instructor_alternate: value })}
                 />
-              </div>
-
-              {/**TODO
-              Creación de comisiones, ver si seleccionamos día y horario(desde, hasta) desde dos combos mas un boton agregar
-              o tmb que aparezca una tabla con colmnas check, dias, desde, hasta 
-              */}              
+              </div>             
     
             </div>
+            <Table />
             <div className="form__action-buttons">                        
               <FlatButton
                 className="button__confirm"
