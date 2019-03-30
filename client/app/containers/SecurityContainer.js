@@ -1,5 +1,6 @@
 const { Container } = require('unstated');
 const moment = require('moment');
+const set = require('set-value');
 import 'whatwg-fetch';
 
 class SecurityContainer extends Container {
@@ -117,13 +118,19 @@ class SecurityContainer extends Container {
           let fechaHora = moment(data.fechaHora);
           let diff = now.diff(fechaHora, 'hours');            
           if (diff <= 1) {
-            this.setState({
-              user: data.user.user,
-              isAuthenticated: true,
-              authUser: data.user,
-              sesion: data
+            this.setState((state) => {
+              set(state, 'user', data.user.user);
+              set(state, 'isAuthenticated', true);
+              set(state, 'authUser', data.user);
+              set(state, 'sesion', data);
+              set(state, 'offices.value', data.user.office);
+              return state;
+              // user: data.user.user,
+              // isAuthenticated: true,
+              // authUser: data.user,
+              // sesion: data
             })
-            this.setParams('offices', {value: data.user.office})
+            // this.setParams('offices', {value: data.user.office})
           }
         } else {
           this.setState({

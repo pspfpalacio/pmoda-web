@@ -43,8 +43,11 @@ class CursosContainer extends Container {
   onLoadCursos() {
     let office = SecurityContainer.state.offices.value;
     let listCursos = fetch('/api/cursos').then(res => res.json())
-    Promise.all([listCursos]).then(values => {
-      const cursos = office.name === 'all' ? values[0] : values[0].filter(it => it.office.name === office.name);
+    Promise.resolve(listCursos).then(values => {
+      console.log("office", office);
+      console.log("values", values);
+      const cursos = office.name === 'all' ? values : values.filter(it => it.office.name === office.name);
+      console.log('cursos', cursos);
       this.setState({
         cursos
       })

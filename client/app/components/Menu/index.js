@@ -16,7 +16,7 @@ const Menu = (props) => (
         {securityContainer.state.isAuthenticated &&
         <List>
           <Subheader>Opciones</Subheader>
-          <ListItem
+          {/* <ListItem
             key={1}
             primaryText="Inscripción"
             nestedItems={[
@@ -26,15 +26,12 @@ const Menu = (props) => (
                 primaryText="Inscripción"
               /></Link>
             ]}
+          /> */}
+          <ListItem
+            key={1}
+            primaryText="Inscripción"
+            onClick={() => navigate.to(history, "/inscripcion")}
           />
-          {/* <Link key={21} to="cursos/list"><ListItem
-            key={2}
-            primaryText="Cursos"
-          /></Link> */}
-          {/* <Link key={31} to="alumnos/list"><ListItem
-            key={3}
-            primaryText="Alumnos"
-          /></Link> */}
           <Subheader>Configuraciones</Subheader>
           <ListItem
             key={2}

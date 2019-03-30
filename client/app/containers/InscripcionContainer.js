@@ -1,5 +1,7 @@
 const { Container } = require('unstated')
-const moment = require('moment')
+const moment = require('moment');
+const set = require('set-value');
+
 const SecurityContainer = require('./SecurityContainer')
 const UIContainer = require("./UIContainer")
 
@@ -34,6 +36,13 @@ import 'whatwg-fetch';
 //   }
 // }
 
+const getDefaultInscription = () => {
+  return {
+    date: moment(),
+    curso: null,
+  }
+}
+
 class InscripcionContainer extends Container {
   constructor() {
     super();
@@ -43,6 +52,7 @@ class InscripcionContainer extends Container {
      * modificar cualquier valor usar los métodos setter.
      */
     this.state = {
+      inscription: getDefaultInscription()
       // materias: [],
       // selected: [],
       // toActive: [],
@@ -65,11 +75,20 @@ class InscripcionContainer extends Container {
     }
   }
 
-  setData(field, value, callback = () => {}) {
+  setData(field, value) {
     return this.setState((state) => {
       set(state, field, value);
       return state;
-    }, callback);
+    });
+  }
+
+  onLoadInscriptions() {
+    let list = fetch('/api/inscriptions').then(res => res.json());
+    Promise.resolve(list)
+    .then(response => {
+      console.log('response', response);
+    })
+    .catch(err => console.log(err));
   }
 
   // onLoadMaterias() {
@@ -486,4 +505,4 @@ class InscripcionContainer extends Container {
 
 }
 
-module.exports = new MateriasContainer();
+module.exports = new InscripcionContainer();

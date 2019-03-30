@@ -6,7 +6,6 @@
 
 @import '~react-table/react-table.css';
 @import '~react-datepicker/dist/react-datepicker.css';
-@import '~react-times/css/classic/default.css';
 
 a {
   text-decoration: none;
@@ -39,5 +38,19 @@ a {
         background: rgba(#000, 0.1);
       }
     }
+  }
+}
+
+.react-datepicker-wrapper {
+  .react-datepicker__input-container {
+    input {
+      align-items: center;
+      background-color: hsl(0,0%,98%);
+      border-color: hsl(0,0%,80%);
+      border-radius: 4px;
+      border-style: solid;
+      border-width: 1px;
+      min-height: 34px;
+    }    
   }
 }
